@@ -5,9 +5,8 @@ use std::thread;
 use std::time::Duration;
 
 use crate::errors::PulpoError;
-use crate::gotify::Message as GotifyMessage;
+use crate::gotifywsclient::Message as GotifyMessage;
 use crate::helpers::{get_cache_path, to_websocket};
-use crate::userauth::UserAuth;
 
 use log::{debug, info, warn};
 use notify_rust::Notification;
@@ -70,43 +69,43 @@ impl GotifyWSClient {
         }
     }
 
-    pub fn from_cache(client_name: &str) -> Result<Self> {
-        let cache_path = get_cache_path()?;
-        let json_name = format!("{}/{}.json", &cache_path, client_name);
-        let json_file = Path::new(&json_name);
+    // pub fn from_cache(client_name: &str) -> Result<Self> {
+    //     let cache_path = get_cache_path()?;
+    //     let json_name = format!("{}/{}.json", &cache_path, client_name);
+    //     let json_file = Path::new(&json_name);
 
-        let f = fs::File::open(json_file)?;
-        let reader = BufReader::new(f);
+    //     let f = fs::File::open(json_file)?;
+    //     let reader = BufReader::new(f);
 
-        let c = serde_json::from_reader(reader)?;
+    //     let c = serde_json::from_reader(reader)?;
 
-        return Ok(c);
-    }
+    //     return Ok(c);
+    // }
 
-    pub fn from_user_auth(auth: UserAuth) -> Result<Self> {
-        let cli = auth.authenticate()?;
-        let ws_url = to_websocket(auth.url)?;
+    // pub fn from_user_auth(auth: UserAuth) -> Result<Self> {
+    //     let cli = auth.authenticate()?;
+    //     let ws_url = to_websocket(auth.url)?;
 
-        let gdnd_cli = GotifyWSClient::new(ws_url, cli.token, Some(auth.client));
+    //     let gdnd_cli = GotifyWSClient::new(ws_url, cli.token, Some(auth.client));
 
-        Ok(gdnd_cli)
-    }
+    //     Ok(gdnd_cli)
+    // }
 
-    pub fn write_cache(&self) -> Result<()> {
-        if let Some(c) = &self.client_name {
-            let cache_path = get_cache_path()?;
-            fs::create_dir_all(&cache_path)?;
-            let json_file = format!("{}/{}.json", &cache_path, c);
-            let f = fs::File::create(json_file)?;
+    // pub fn write_cache(&self) -> Result<()> {
+    //     if let Some(c) = &self.client_name {
+    //         let cache_path = get_cache_path()?;
+    //         fs::create_dir_all(&cache_path)?;
+    //         let json_file = format!("{}/{}.json", &cache_path, c);
+    //         let f = fs::File::create(json_file)?;
 
-            serde_json::to_writer(f, &self)?;
+    //         serde_json::to_writer(f, &self)?;
 
-            Ok(())
-        } else {
-            let err_msg = "Missing client name unable to write cache.".to_string();
-            Err(PulpoError::MissingArgs(err_msg))
-        }
-    }
+    //         Ok(())
+    //     } else {
+    //         let err_msg = "Missing client name unable to write cache.".to_string();
+    //         Err(PulpoError::MissingArgs(err_msg))
+    //     }
+    // }
 
     pub fn run_loop(&self, poll: u64) -> Result<()> {
         // TO DO: factor out the connection

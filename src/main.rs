@@ -4,6 +4,7 @@ pub mod helpers;
 pub mod tray;
 pub mod config;
 pub mod gotifywsclient;
+
 use crate::{
     args::Args,
     errors::PulpoError,
