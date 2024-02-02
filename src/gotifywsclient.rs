@@ -20,15 +20,15 @@ type Result<T> = std::result::Result<T, GdndError>;
 type AuthToken = String;
 
 #[derive(Deserialize, Serialize)]
-pub struct GdndClient {
+pub struct GotifyWSClient {
     ws_url: Url,
     token: AuthToken,
     client_name: Option<String>,
 }
 
-impl GdndClient {
+impl GotifyWSClient {
     pub fn new(ws_url: Url, token_provider: AuthToken, client_name: Option<String>) -> Self {
-        GdndClient {
+        GotifyWSClient {
             ws_url,
             token: token_provider,
             client_name,
@@ -52,7 +52,7 @@ impl GdndClient {
         let cli = auth.authenticate()?;
         let ws_url = to_websocket(auth.url)?;
 
-        let gdnd_cli = GdndClient::new(ws_url, cli.token, Some(auth.client));
+        let gdnd_cli = GotifyWSClient::new(ws_url, cli.token, Some(auth.client));
 
         Ok(gdnd_cli)
     }
