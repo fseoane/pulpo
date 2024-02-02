@@ -8,7 +8,8 @@ pub mod gotifywsclient;
 use crate::{
     args::Args,
     errors::PulpoError,
-    config::{ConfigData,read_config},  
+    config::{ConfigData,read_config}, 
+    tray::build_tray_menu, 
     gotifywsclient::GotifyWSClient,
     helpers::{base_url, to_websocket},
 };
@@ -118,18 +119,34 @@ fn main(){
     let got_url = Url::parse(configdata.gotify.gotify_url.as_str());
     let got_token = configdata.gotify.gotify_client_token.as_str();
     let nfy_url = Url::parse(configdata.ntfy.ntfy_url.as_str());
-    //let g_url = c_url;
+    let nfy_topics = configdata.ntfy.ntfy_topics.as_str();
+    
     let args = Args { 
         gotify_token: Some(got_token.to_string()), 
         gotify_url: got_url.unwrap(),
+        ntfy_url: nfy_url.unwrap(),
+        ntfy_topics: Some(nfy_topics.to_string()), 
         poll: 5,
         foreground: fg,
     };
+
+    //let icon_filename = configdata.config.tray_icon.as_str();
+
+    let tray_thread = std::thread::spawn(move || {
+        let icon_filename = configdata.config.tray_icon.as_str();
+        build_tray_menu(icon_filename);
+        
+    });
+
+    let gotify_thread = std::thread::spawn(move || {
+        let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
+        println!("{}","Exiting");
+        println!("{:#?}",res);
+    });
+
     
-    //println!("{:#?}",args);
-    let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
-    println!("{}","Exiting");
-    println!("{:#?}",res);
+    // println!("{}","Exiting");
+    // println!("{:#?}",res);
 
     // // if let Err(e) = log_gotify_messages(args) {
     // //     println!("{:#?}", e);

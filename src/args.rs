@@ -27,6 +27,14 @@ pub struct Args {
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
     pub gotify_url: Url,
 
+    /// Ntfy server url
+    //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
+    pub ntfy_url: Url,
+
+    /// Gotify client token: If used username password and client are not needed
+    //#[structopt(short = "t", long, env = "GDND_TOKEN")]
+    pub ntfy_topics: Option<String>,
+
     /// Gotify client name: Required if authenticating with username and password
     //#[structopt(short, long, env = "GDND_CLIENT")]
     //pub client: Option<String>,
