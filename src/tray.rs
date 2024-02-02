@@ -7,15 +7,19 @@ use appindicator3::{prelude::*, IndicatorBuilder, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
 use gtk::{prelude::*, MenuItem};
 use serde_derive::Deserialize;
-
+use open;
 
 // -----------------------------------------------------------------------------------------------
 
-pub fn tray_menu_item_clicked(item: &MenuItem) {
+fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
-pub fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
+fn tray_menu_item_open_webbrowser(item: &MenuItem, url: &str) {
+    open::that(url);
+}
+
+fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     let menu = gtk::Menu::new();
 
     let mi = gtk::MenuItem::with_label("Sub 1");
@@ -40,7 +44,7 @@ pub fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     parent.set_submenu(Some(&menu));
 }
 
-pub fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
+fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
     let menu = gtk::Menu::new();
 
     let mi = gtk::MenuItem::with_label(format!("(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
@@ -65,6 +69,9 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
     let gotify_token = configdata.gotify.gotify_client_token;
     let ntfy_url = configdata.ntfy.ntfy_url;
     let ntfy_topics = configdata.ntfy.ntfy_topics;
+
+    let got_url = gotify_url.clone();
+    let nfy_url = ntfy_url.clone();
 
     // Initialize GTK
     gtk::init().expect("Failed to initialize GTK.");
@@ -91,14 +98,14 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Open Gotify");
-    menu_item.connect_activate(|menu_item|{
-        tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
+    menu_item.connect_activate(move |item|{
+        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), got_url.as_str())
     });
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Open Ntfy");
-    menu_item.connect_activate(|menu_item|{
-        tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
+    menu_item.connect_activate(move |item|{
+        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url.as_str())
     });
     menu.append(&menu_item);
 

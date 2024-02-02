@@ -1,1 +1,1 @@
-clear && cargo build && ls -lah target/debug/pulpo
+clear && cargo build --release && ls -lah target/release/pulpo

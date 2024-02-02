@@ -2,7 +2,7 @@ killall pulpo
 
 sudo mkdir -p /opt/pulpo/resources
 sudo mkdir -p /opt/pulpo/config
-sudo cp target/debug/pulpo /opt/pulpo/
+sudo cp target/release/pulpo /opt/pulpo/
 sudo cp pulpo.desktop /opt/pulpo/
 sudo cp resources/* /opt/pulpo/resources/
 

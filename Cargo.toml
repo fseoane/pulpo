@@ -28,5 +28,6 @@ structopt = "0.3.26"
 tungstenite = { version = "0.21.0" , features = ["native-tls"] }
 url =  { version = "2.5.0", features = ["serde"] }
 ears = "0.8.0"
+open = "5.0.1"
 
 
