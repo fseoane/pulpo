@@ -4,11 +4,11 @@ use ureq;
 use url::Url;
 
 use crate::args::Args;
-use crate::errors::GdndError;
+use crate::errors::PulpoError;
 use crate::gotify::Client;
 use crate::helpers::base_url;
 
-type Result<T> = std::result::Result<T, GdndError>;
+type Result<T> = std::result::Result<T, PulpoError>;
 
 pub struct UserAuth {
     pub client: String,
@@ -44,7 +44,7 @@ impl UserAuth {
             resp.into_json_deserialize::<Client>()?
         } else {
             let err_msg = format!("Authentication request failed: {}", resp.status_line());
-            return Err(GdndError::UreqResponse(err_msg));
+            return Err(PulpoError::UreqResponse(err_msg));
         };
 
         Ok(cli)
@@ -52,7 +52,7 @@ impl UserAuth {
 }
 
 impl TryFrom<Args> for UserAuth {
-    type Error = GdndError;
+    type Error = PulpoError;
 
     fn try_from(value: Args) -> Result<UserAuth> {
         let url = base_url(&value.url)?;
@@ -63,7 +63,7 @@ impl TryFrom<Args> for UserAuth {
                 let err_msg =
                     "Client name is required when authenticating via username and password."
                         .to_string();
-                return Err(GdndError::MissingArgs(err_msg));
+                return Err(PulpoError::MissingArgs(err_msg));
             }
         };
 
@@ -72,7 +72,7 @@ impl TryFrom<Args> for UserAuth {
             None => {
                 let err_msg = "Username is required when authenticating via username and password."
                     .to_string();
-                return Err(GdndError::MissingArgs(err_msg));
+                return Err(PulpoError::MissingArgs(err_msg));
             }
         };
 
@@ -81,7 +81,7 @@ impl TryFrom<Args> for UserAuth {
             None => {
                 let err_msg = "Password is required when authenticating via username and password."
                     .to_string();
-                return Err(GdndError::MissingArgs(err_msg));
+                return Err(PulpoError::MissingArgs(err_msg));
             }
         };
 

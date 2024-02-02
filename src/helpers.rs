@@ -2,9 +2,9 @@ use std::env::var;
 
 use url::Url;
 
-use crate::errors::GdndError;
+use crate::errors::PulpoError;
 
-type Result<T> = std::result::Result<T, GdndError>;
+type Result<T> = std::result::Result<T, PulpoError>;
 
 /// Takes a url and returns the base url by removing the path
 pub fn base_url(url: &Url) -> Result<Url> {
@@ -14,7 +14,7 @@ pub fn base_url(url: &Url) -> Result<Url> {
         Ok(mut path) => {
             path.clear();
         }
-        Err(_) => return Err(GdndError::BaseUrl(full_url)),
+        Err(_) => return Err(PulpoError::BaseUrl(full_url)),
     }
 
     new_url.set_query(None);
@@ -31,15 +31,15 @@ pub fn to_websocket(url: Url) -> Result<Url> {
     match url.scheme() {
         "https" => {
             if let Err(_) = ws_url.set_scheme(WSS) {
-                return Err(GdndError::SchemeError(url));
+                return Err(PulpoError::SchemeError(url));
             };
         }
         "http" => {
             if let Err(_) = ws_url.set_scheme(WS) {
-                return Err(GdndError::SchemeError(url));
+                return Err(PulpoError::SchemeError(url));
             };
         }
-        _ => return Err(GdndError::MissingProtocol),
+        _ => return Err(PulpoError::MissingProtocol),
     }
 
     Ok(ws_url)

@@ -3,7 +3,8 @@ pub mod errors;
 pub mod gotifywsclient;
 pub mod gotify;
 pub mod helpers;
-pub mod userauth;
+pub mod tray;
+pub mod config;
 
 use std::fs;
 use std::fmt;
@@ -115,7 +116,7 @@ fn main(){
         foreground: fg,
     };
 
-    let res: std::result::Result<(), GdndError> = log_gotify_messages(args);
+    let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
     println!("{}","Exiting");
     println!("{:#?}",res);
 

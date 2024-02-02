@@ -1,11 +1,21 @@
 [package]
 name = "pulpo"
 version = "0.1.0"
+authors = ["Fernando Seoane <fseoane@hotmail.com>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "pulpo"
+path ="src/main.rs"
+
+
 [dependencies]
+toml = "0.8.8"
+appindicator3 = "0.3.0"
+gtk = "0.18"
+glib = "0.18"
 chrono = { version = "0.4.33" , features = ["serde"] }
 daemonize = "0.5.0"
 log = "0.4.20"

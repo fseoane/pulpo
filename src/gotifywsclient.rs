@@ -4,7 +4,7 @@ use std::path::Path;
 use std::thread;
 use std::time::Duration;
 
-use crate::errors::GdndError;
+use crate::errors::PulpoError;
 use crate::gotify::Message as GotifyMessage;
 use crate::helpers::{get_cache_path, to_websocket};
 use crate::userauth::UserAuth;
@@ -14,10 +14,45 @@ use notify_rust::Notification;
 use serde::{Deserialize, Serialize};
 use tungstenite::Message;
 use url::Url;
+use chrono::{DateTime, Utc};
+use serde_json::Value;
 
-type Result<T> = std::result::Result<T, GdndError>;
+type Result<T> = std::result::Result<T, PulpoError>;
 
 type AuthToken = String;
+
+// gotify api structs
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Messages {
+    pub messages: Vec<Message>,
+    pub paging: Paging,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Message {
+    pub appid: usize,
+    pub date: DateTime<Utc>,
+    pub extras: Option<Vec<Value>>,
+    pub id: usize,
+    pub message: String,
+    pub priority: usize,
+    pub title: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Paging {
+    pub limit: usize,
+    pub next: Option<String>,
+    pub since: usize,
+    pub size: usize,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Client {
+    pub id: usize,
+    pub name: String,
+    pub token: String,
+}
 
 #[derive(Deserialize, Serialize)]
 pub struct GotifyWSClient {
@@ -69,7 +104,7 @@ impl GotifyWSClient {
             Ok(())
         } else {
             let err_msg = "Missing client name unable to write cache.".to_string();
-            Err(GdndError::MissingArgs(err_msg))
+            Err(PulpoError::MissingArgs(err_msg))
         }
     }
 
