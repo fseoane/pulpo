@@ -1,10 +1,8 @@
 
 
 // Import the required dependencies.
-use serde_derive::Deserialize;
-use std::fs;
 use std::env;
-use std::process::exit;
+
 
 use std::path::Path;
 use appindicator3::{prelude::*, IndicatorStatus};

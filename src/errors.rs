@@ -1,7 +1,7 @@
 use std::fmt;
 use url::{ParseError, Url};
-use daemonize::Daemonize;
 use tungstenite::error::Error as TungError;
+
 
 #[derive(Debug)]
 pub enum PulpoError {

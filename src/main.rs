@@ -12,23 +12,17 @@ use crate::{
     helpers::{base_url, to_websocket},
 };
 
-use std::fs;
-use std::fmt;
-use std::io::BufReader;
 use std::path::Path;
-use std::thread;
 use std::time::Duration;
 use std::env::var;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
+
 
 use log::{info, warn};
-use notify_rust::Notification;
 use url::{ParseError, Url};
 use daemonize::Daemonize;
-use tungstenite::Message;
-use tungstenite::error::Error as TungError;
+
+type Result<T> = std::result::Result<T, PulpoError>;
 
 // --------------------------------------------------------------------------------------------------
 
@@ -71,17 +65,6 @@ fn main(){
     let help_option1: &str = "-h";
     let help_option2: &str = "--help";
 
-    // if cmdline.len()==1{
-    //     println!(" ");
-    //     println!("---------------------------------------------------------------------");
-    //     println!("{} {} {}",prog_name,"[-d]","[<url>]");
-    //     println!("    Options:");
-    //     println!("        -d   : To run the program in background (daemonized).");
-    //     println!("        <url>: Gotify url in the form of http(s)://the.host.name:port");
-    //     println!("               Default <url> is https://yecla.mooo.com:20589");
-    //     println!("----------------------------------------------------------------------");
-    //     println!(" ");
-    // }; 
 
     if cmdline.len()>1 && (cmdline[1].eq(help_option1) || cmdline[1].eq(help_option2)){
         println!(" ");
@@ -111,9 +94,6 @@ fn main(){
         c_url = Url::parse(cmdline[2].as_str());
     };
     
-    // mutable to update from env vars
-    //let g_url = Url::parse("https://20.12.69.202:30589/");
-    //let g_url = Url::parse("https://yecla.mooo.com:20589/");
     let g_url = c_url;
     let args = Args { 
         token: Some("CCX6GtJPVh_osXB".to_string()), 
@@ -126,7 +106,7 @@ fn main(){
     println!("{}","Exiting");
     println!("{:#?}",res);
 
-    // if let Err(e) = get_g_messages(args) {
+    // if let Err(e) = log_gotify_messages(args) {
     //     println!("{:#?}", e);
     //     println!("{}","Exiting");
     //     std::process::exit(1);

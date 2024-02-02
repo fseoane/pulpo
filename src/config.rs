@@ -3,7 +3,6 @@
 // Import the required dependencies.
 use serde_derive::Deserialize;
 use std::fs;
-use std::env;
 use toml;
 use std::path::Path;
 
@@ -53,7 +52,7 @@ fn read_config(filename: &str) -> ConfigData{
             // Write `msg` to `stderr`.
             eprintln!("[!] Could not read config file `{}`", filename);
             // Exit the program with exit code `1`.
-            exit(1);
+            std::process::exit(1);
         }
     };
 
@@ -69,7 +68,7 @@ fn read_config(filename: &str) -> ConfigData{
             // Write `msg` to `stderr`.
             eprintln!("[!] Unable to load config data from `{}`", filename);
             // Exit the program with exit code `1`.
-            exit(1);
+            std::process::exit(1);
         }
     };
     return configdata;
