@@ -5,7 +5,6 @@ use std::thread;
 use std::time::Duration;
 
 use crate::errors::PulpoError;
-use crate::gotifywsclient::Message as GotifyMessage;
 use crate::helpers::{get_cache_path, to_websocket};
 
 use log::{debug, info, warn};
@@ -23,12 +22,12 @@ type AuthToken = String;
 // gotify api structs
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Messages {
-    pub messages: Vec<Message>,
+    pub messages: Vec<GotifyMessage>,
     pub paging: Paging,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Message {
+pub struct GotifyMessage {
     pub appid: usize,
     pub date: DateTime<Utc>,
     pub extras: Option<Vec<Value>>,
