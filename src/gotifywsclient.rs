@@ -1,6 +1,8 @@
 
 use std::thread;
 use std::time::Duration;
+extern crate ears;
+use ears::{Sound, AudioController};
 
 use crate::errors::PulpoError;
 //use crate::helpers::{get_cache_path, to_websocket};
@@ -65,9 +67,20 @@ impl GotifyWSClient {
         }
     }
 
-    pub fn run_loop(&self, poll: u64) -> Result<()> {
+    fn play_file(file: &str) {
+        // Create a new Sound.
+        let mut snd = Sound::new(file).unwrap();
+
+        // Play the Sound
+        snd.play();
+
+        // Wait until the end of the sound
+        while snd.is_playing() {}
+    }
+
+    pub fn run_loop(&self, poll: u64, notif_sound: &str, notif_icon: &str) -> Result<()> {
         
-        println!("{}","Starting loop");
+        info!("{}","Starting loop");
 
         // TO DO: factor out the connection
         let mut ws_url = self.ws_url.clone();
@@ -75,13 +88,13 @@ impl GotifyWSClient {
         let query = format!("token={}", self.token);
         ws_url.set_query(Some(&query));
 
-        //debug!("Websocket url: {}", ws_url);
-        println!("Websocket url: {}", ws_url);
+        info!("Websocket url: {}", ws_url);
+        //println!("Websocket url: {}", ws_url);
 
         let (mut socket, _response) = tungstenite::connect(&ws_url)?;
 
-        //info!("Connected to {}", self.ws_url);
-        println!("Connected to {}", ws_url);
+        info!("Connected to {}", self.ws_url);
+        //println!("Connected to {}", ws_url);
 
         loop {
             // attempt to read from the socket
@@ -99,8 +112,12 @@ impl GotifyWSClient {
                 let notif = Notification::new()
                     .summary(&m.title)
                     .body(&m.message)
+                    .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
                     .show();
-                println!("[!] Message received | title:{} message:{}",m.title,m.message);
+                    
+                GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
+    
+                info!("[!] Message received | title:{} message:{}",m.title,m.message);
                 // if the notification fails some how log it but do not kill the process
                 // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
                 // threshhold

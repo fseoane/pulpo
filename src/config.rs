@@ -27,7 +27,8 @@ pub struct GeneralConfig {
 pub struct GotifyConf {
 	pub gotify_url: String,
 	pub gotify_client_token: String,
-	pub gotify_sound: String,
+    pub gotify_sound: String,   
+    pub gotify_icon: String,
 }
 
 // Config struct holds to data from the `[ntfy]` section.
@@ -35,7 +36,8 @@ pub struct GotifyConf {
 pub struct NtfyConf {
 	pub ntfy_url: String,
 	pub ntfy_topics: String,
-	pub ntfy_sound: String,
+    pub ntfy_sound: String,
+    pub ntfy_icon: String,
 }
 
 pub fn read_config(filename: &str) -> ConfigData{
@@ -73,39 +75,3 @@ pub fn read_config(filename: &str) -> ConfigData{
     };
     return configdata;
 }
-
-
-// fn main() {
-//     // Reading command line arguments
-//     let args: Vec<String> = env::args().collect();
-
-//     let mut option: &str = "";
-//     let mut parameter: &str  = "";
-//     let config_option: &str = "-c";
-//     let filename: &str;
-    
-//     if args.len()>1{
-//         option = &args[1];
-//     };
-//     if args.len()>2{
-//         parameter = &args[2];
-//     } ;
-//     if args.len()>2 && option.eq(config_option){
-//         filename = parameter;
-//     } else {
-//         filename = "rNotify.conf";
-//     };
-
-//     let configdata: ConfigData = read_config(filename);
-
-//     // Print out the values to `stdout`.
-//     println!("config/tray_icon:           {}", configdata.config.tray_icon); 
-//     println!("gotify/gotify_url:          {}", configdata.gotify.gotify_url);
-// 	println!("gotify/gotify_client_token: {}", configdata.gotify.gotify_client_token);
-// 	println!("gotify/gotify_sound:        {}", configdata.gotify.gotify_sound);
-// 	println!("ntfy/ntfy_url:              {}", configdata.ntfy.ntfy_url);
-// 	println!("ntfy/ntfy_topics:           {}", configdata.ntfy.ntfy_topics);
-// 	println!("ntfy/ntfy_sound:            {}", configdata.ntfy.ntfy_sound);
-
-
-// }

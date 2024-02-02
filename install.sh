@@ -4,7 +4,7 @@ sudo mkdir -p /opt/pulpo/resources
 sudo mkdir -p /opt/pulpo/config
 sudo cp target/debug/pulpo /opt/pulpo/
 sudo cp pulpo.desktop /opt/pulpo/
-sudo cp resources/pulpo* /opt/pulpo/resources/
+sudo cp resources/* /opt/pulpo/resources/
 
 read -r -p "Install default configuration file (pulpo.conf)? [y/N] " response
 if [ "$response" = "y" ] || [ "$response" = "Y" ]; then

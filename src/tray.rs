@@ -1,5 +1,4 @@
-
-
+use crate::config;
 // Import the required dependencies.
 use std::env;
 
@@ -7,59 +6,8 @@ use std::path::Path;
 use appindicator3::{prelude::*, IndicatorBuilder, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
 use gtk::{prelude::*, MenuItem};
+use serde_derive::Deserialize;
 
-// use tray_icon::{
-//     menu::{AboutMetadata, Menu, MenuEvent, MenuItem, PredefinedMenuItem},
-//     TrayIconBuilder, TrayIconEvent,
-// };
-// use winit::event_loop::{ControlFlow, EventLoopBuilder};
-
-// pub fn build_tray_menu(icon_filename: &str) {
-//     let path = format!("{}/resources/{}",env!("CARGO_MANIFEST_DIR"),icon_filename);
-//     let icon = load_icon(std::path::Path::new(&path));
-
-//     // Since winit doesn't use gtk on Linux, and we need gtk for
-//     // the tray icon to show up, we need to spawn a thread
-//     // where we initialize gtk and create the tray_icon
-//     #[cfg(target_os = "linux")]
-//     std::thread::spawn(|| {
-//         use tray_icon::menu::Menu;
-
-//         gtk::init().unwrap();
-//         let _tray_icon = TrayIconBuilder::new()
-//             .with_menu(Box::new(Menu::new()))
-//             .with_icon(icon)
-//             .build()
-//             .unwrap();
-
-//         gtk::main();
-//     });
-
-//     let event_loop = EventLoopBuilder::new().build().unwrap();
-
-//     //let menu_channel = MenuEvent::receiver();
-//     let tray_channel = TrayIconEvent::receiver();
-
-//     event_loop.run(move |_event, event_loop| {
-//         event_loop.set_control_flow(ControlFlow::Poll);
-
-//         if let Ok(event) = tray_channel.try_recv() {
-//             println!("{event:?}");
-//         }
-//     });
-// }
-
-// fn load_icon(path: &std::path::Path) -> tray_icon::Icon {
-//     let (icon_rgba, icon_width, icon_height) = {
-//         let image = image::open(path)
-//             .expect("Failed to open icon path")
-//             .into_rgba8();
-//         let (width, height) = image.dimensions();
-//         let rgba = image.into_raw();
-//         (rgba, width, height)
-//     };
-//     tray_icon::Icon::from_rgba(icon_rgba, icon_width, icon_height).expect("Failed to open icon")
-// }
 
 // -----------------------------------------------------------------------------------------------
 
@@ -92,16 +40,31 @@ pub fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     parent.set_submenu(Some(&menu));
 }
 
-pub fn build_tray_menu(icon: &str){
+pub fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
+    let menu = gtk::Menu::new();
+
+    let mi = gtk::MenuItem::with_label(format!("(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
+    //mi.connect_activate(tray_menu_item_clicked);
+    menu.append(&mi);
+
+    menu.show_all();
+
+    parent.set_submenu(Some(&menu));
+}
+
+
+pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
 
     // Set your application name and icon
     let app_name: &str = "pulpo";
     let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");//"/home/efe/Dev/RustLearning/read_config_from_toml_file/resources"; //"notification.png";
-
-
-
+    let tray_icon= configdata.config.tray_icon.as_str(); 
+    let gotify_url = configdata.gotify.gotify_url;
+    let gotify_token = configdata.gotify.gotify_client_token;
+    let ntfy_url = configdata.ntfy.ntfy_url;
+    let ntfy_topics = configdata.ntfy.ntfy_topics;
 
     // Initialize GTK
     gtk::init().expect("Failed to initialize GTK.");
@@ -143,9 +106,10 @@ pub fn build_tray_menu(icon: &str){
     menu.append(&menu_item);
     
     let menu_item = gtk::MenuItem::with_label("About");
-    menu_item.connect_activate(|menu_item|{
-        tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
-    });
+    // menu_item.connect_activate(|menu_item|{
+    //     tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
+    // });
+    tray_menu_append_about_submenu(&menu_item,config_file,gotify_url.as_str(),gotify_token.as_str(),ntfy_url.as_str(),ntfy_topics.as_str());
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Quit");
@@ -165,7 +129,7 @@ pub fn build_tray_menu(icon: &str){
         .menu(&menu)
         .icon_theme_path(icon_path.to_str().unwrap())
         //.icon("notification.png", "pulpo")
-        .icon(icon , "pulpo")
+        .icon(tray_icon, "pulpo")
         .attention_icon("notification.att.png", "pulpo attention")
         .status(IndicatorStatus::Active)
         .build();
