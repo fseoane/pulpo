@@ -3,7 +3,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::errors::PulpoError;
-use crate::helpers::{get_cache_path, to_websocket};
+//use crate::helpers::{get_cache_path, to_websocket};
 
 use log::{debug, info, warn};
 use notify_rust::Notification;
@@ -13,6 +13,7 @@ use url::Url;
 use chrono::{DateTime, Utc};
 use serde_json::Value;
 
+type Result<T> = std::result::Result<T, PulpoError>;
 type AuthToken = String;
 
 // gotify api structs

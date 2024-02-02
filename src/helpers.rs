@@ -8,7 +8,8 @@ type Result<T> = std::result::Result<T, PulpoError>;
 
 /// Takes a url and returns the base url by removing the path
 pub fn base_url(url: &Url) -> Result<Url> {
-    let full_url = url.clone().into_string();
+    //let full_url = url.clone().into_string();
+    let full_url = String::from(url.clone());
     let mut new_url = url.clone();
     match new_url.path_segments_mut() {
         Ok(mut path) => {
