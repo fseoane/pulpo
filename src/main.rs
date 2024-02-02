@@ -8,6 +8,7 @@ pub mod gotifywsclient;
 use crate::{
     args::Args,
     errors::PulpoError,
+    config::{ConfigData,read_config},  
     gotifywsclient::GotifyWSClient,
     helpers::{base_url, to_websocket},
 };
@@ -55,6 +56,8 @@ fn log_gotify_messages(args: Args) -> Result<()> {
 
 fn main(){
     let cmdline: Vec<String> = std::env::args().collect();
+    
+    let mut config_filename: &str = "pulpo.conf";
 
     let path_and_prog_name = cmdline[0].as_str();
     let pos = path_and_prog_name.rfind('/').unwrap();
@@ -62,8 +65,10 @@ fn main(){
     let mut fg: bool = true;
     let mut c_url = Url::parse("https://yecla.mooo.com:20589/");
     let fg_option: &str = "-d";
+    let config_option: &str = "-c";
     let help_option1: &str = "-h";
     let help_option2: &str = "--help";
+
 
 
     if cmdline.len()>1 && (cmdline[1].eq(help_option1) || cmdline[1].eq(help_option2)){
@@ -90,8 +95,12 @@ fn main(){
         };
     };
 
-    if cmdline.len()>2 && cmdline[1].eq(fg_option){
+    if cmdline.len()>2 && cmdline[1].eq(fg_option) && cmdline[1].ne(config_option){
         c_url = Url::parse(cmdline[2].as_str());
+    };
+
+    if cmdline.len()>2 && cmdline[1].ne(fg_option) && cmdline[1].eq(config_option){
+        config_filename = cmdline[2].as_str();
     };
     
     let g_url = c_url;
@@ -101,6 +110,8 @@ fn main(){
         poll: 5,
         foreground: fg,
     };
+
+    let configdata: ConfigData = read_config(config_filename);
 
     let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
     println!("{}","Exiting");

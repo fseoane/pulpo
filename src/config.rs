@@ -4,13 +4,13 @@
 use serde_derive::Deserialize;
 use std::fs;
 use toml;
-use std::path::Path;
+//use std::path::Path;
 
 
 
 // Top level struct to hold the TOML data.
 #[derive(Deserialize)]
-struct ConfigData {
+pub struct ConfigData {
     config: GeneralConfig,
 	gotify: GotifyConf,
 	ntfy: NtfyConf,
@@ -18,13 +18,13 @@ struct ConfigData {
 
 // Config struct holds to data from the `[config]` section.
 #[derive(Deserialize)]
-struct GeneralConfig {
+pub struct GeneralConfig {
     tray_icon: String,
 }
 
 // Config struct holds to data from the `[gotify]` section.
 #[derive(Deserialize)]
-struct GotifyConf {
+pub struct GotifyConf {
 	gotify_url: String,
 	gotify_client_token: String,
 	gotify_sound: String,
@@ -32,13 +32,13 @@ struct GotifyConf {
 
 // Config struct holds to data from the `[ntfy]` section.
 #[derive(Deserialize)]
-struct NtfyConf {
+pub struct NtfyConf {
 	ntfy_url: String,
 	ntfy_topics: String,
 	ntfy_sound: String,
 }
 
-fn read_config(filename: &str) -> ConfigData{
+pub fn read_config(filename: &str) -> ConfigData{
     // Read the contents of the file using a `match` block 
     // to return the `data: Ok(c)` as a `String` 
     // or handle any `errors: Err(_)`.

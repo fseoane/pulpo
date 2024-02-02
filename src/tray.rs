@@ -3,19 +3,17 @@
 // Import the required dependencies.
 use std::env;
 
-
 use std::path::Path;
 use appindicator3::{prelude::*, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
-//use gtk::prelude::*;
 use gtk::{prelude::*, MenuItem};
 
 
-fn tray_menu_item_clicked(item: &MenuItem) {
+pub fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
-fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
+pub fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     let menu = gtk::Menu::new();
 
     let mi = gtk::MenuItem::with_label("Sub 1");
@@ -40,7 +38,7 @@ fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     parent.set_submenu(Some(&menu));
 }
 
-fn build_tray_menu(){
+pub fn build_tray_menu(){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
 
@@ -130,29 +128,7 @@ fn build_tray_menu(){
 //     let mut parameter: &str  = "";
 //     let config_option: &str = "-c";
 //     let filename: &str;
-    
-//     if args.len()>1{
-//         option = &args[1];
-//     };
-//     if args.len()>2{
-//         parameter = &args[2];
-//     } ;
-//     if args.len()>2 && option.eq(config_option){
-//         filename = parameter;
-//     } else {
-//         filename = "rNotify.conf";
-//     };
 
-//     let configdata: ConfigData = read_config(filename);
-
-//     // Print out the values to `stdout`.
-//     println!("config/tray_icon:           {}", configdata.config.tray_icon); 
-//     println!("gotify/gotify_url:          {}", configdata.gotify.gotify_url);
-// 	println!("gotify/gotify_client_token: {}", configdata.gotify.gotify_client_token);
-// 	println!("gotify/gotify_sound:        {}", configdata.gotify.gotify_sound);
-// 	println!("ntfy/ntfy_url:              {}", configdata.ntfy.ntfy_url);
-// 	println!("ntfy/ntfy_topics:           {}", configdata.ntfy.ntfy_topics);
-// 	println!("ntfy/ntfy_sound:            {}", configdata.ntfy.ntfy_sound);
 
 
 //     let icon_filename = format!("{}{}","/home/efe/Dev/RustLearning/read_config_from_toml_file/resources/",configdata.config.tray_icon);
