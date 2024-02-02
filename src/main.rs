@@ -1,10 +1,15 @@
 pub mod args;
 pub mod errors;
-pub mod gotifywsclient;
-pub mod gotify;
 pub mod helpers;
 pub mod tray;
 pub mod config;
+pub mod gotifywsclient;
+use crate::{
+    args::Args,
+    errors::PulpoError,
+    gotifywsclient::GotifyWSClient,
+    helpers::{base_url, to_websocket},
+};
 
 use std::fs;
 use std::fmt;
