@@ -131,20 +131,33 @@ fn main(){
     };
 
     //let icon_filename = configdata.config.tray_icon.as_str();
-
-    let tray_thread = std::thread::spawn(move || {
+    let tray_thread = || {
         let icon_filename = configdata.config.tray_icon.as_str();
         build_tray_menu(icon_filename);
-        
-    });
+    };
 
-    let gotify_thread = std::thread::spawn(move || {
-        let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
+    let gotify_thread = || {
+        let res: std::result::Result<(), PulpoError> = log_gotify_messages(&args);
         println!("{}","Exiting");
         println!("{:#?}",res);
+    };
+
+    std::thread::scope(|s| {
+        s.spawn(tray_thread);
+        s.spawn(gotify_thread);
     });
 
-    
+    // let tray_thread = std::thread::spawn(move || {
+    //     let icon_filename = configdata.config.tray_icon.as_str();
+    //     build_tray_menu(icon_filename);
+    // });
+
+    // let gotify_thread = std::thread::spawn(move || {
+    //     let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
+    //     println!("{}","Exiting");
+    //     println!("{:#?}",res);
+    // });
+
     // println!("{}","Exiting");
     // println!("{:#?}",res);
 
