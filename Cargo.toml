@@ -3,6 +3,7 @@ name = "pulpo"
 version = "0.1.0"
 authors = ["Fernando Seoane <fseoane@hotmail.com>"]
 edition = "2021"
+include = ["Cargo.toml","/src", "/resources", "/config"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

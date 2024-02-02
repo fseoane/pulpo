@@ -11,38 +11,38 @@ use toml;
 // Top level struct to hold the TOML data.
 #[derive(Deserialize)]
 pub struct ConfigData {
-    config: GeneralConfig,
-	gotify: GotifyConf,
-	ntfy: NtfyConf,
+    pub config: GeneralConfig,
+	pub gotify: GotifyConf,
+	pub ntfy: NtfyConf,
 }
 
 // Config struct holds to data from the `[config]` section.
 #[derive(Deserialize)]
 pub struct GeneralConfig {
-    tray_icon: String,
+    pub tray_icon: String,
 }
 
 // Config struct holds to data from the `[gotify]` section.
 #[derive(Deserialize)]
 pub struct GotifyConf {
-	gotify_url: String,
-	gotify_client_token: String,
-	gotify_sound: String,
+	pub gotify_url: String,
+	pub gotify_client_token: String,
+	pub gotify_sound: String,
 }
 
 // Config struct holds to data from the `[ntfy]` section.
 #[derive(Deserialize)]
 pub struct NtfyConf {
-	ntfy_url: String,
-	ntfy_topics: String,
-	ntfy_sound: String,
+	pub ntfy_url: String,
+	pub ntfy_topics: String,
+	pub ntfy_sound: String,
 }
 
 pub fn read_config(filename: &str) -> ConfigData{
     // Read the contents of the file using a `match` block 
     // to return the `data: Ok(c)` as a `String` 
     // or handle any `errors: Err(_)`.
-    eprintln!("Reading config file `{}`", filename);
+    eprintln!("Configuration ({}) : ", filename);
     let contents:String = match fs::read_to_string(filename) {
         // If successful return the files text as `contents`.
         // `c` is a local variable.

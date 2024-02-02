@@ -8,10 +8,12 @@ use url::Url;
 //     name = "Gotify Desktop Notification Daemon",
 //     about = "Receive notifications from gotify on your desktop."
 // )]
+
+#[derive(Debug)]
 pub struct Args {
     /// Gotify client token: If used username password and client are not needed
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub token: Option<String>,
+    pub gotify_token: Option<String>,
 
     /// Gotify username
     //#[structopt(short = "U", long, env = "GDND_USER")]
@@ -23,7 +25,7 @@ pub struct Args {
 
     /// Gotify server url
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
-    pub url: Url,
+    pub gotify_url: Url,
 
     /// Gotify client name: Required if authenticating with username and password
     //#[structopt(short, long, env = "GDND_CLIENT")]
