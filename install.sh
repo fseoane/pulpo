@@ -16,6 +16,8 @@ else
 		echo "Skipped"
 fi
 
+sudo chmod 755 /etc/pulpo.conf
+sudo chown root:users /etc/pulpo.conf
 sudo chmod -R 755 /opt/pulpo
 sudo chown -R root:users /opt/pulpo
 sudo desktop-file-install --dir=$HOME/.local/share/applications /opt/pulpo/pulpo.desktop

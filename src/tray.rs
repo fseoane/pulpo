@@ -47,7 +47,7 @@ fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
 fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
     let menu = gtk::Menu::new();
 
-    let mi = gtk::MenuItem::with_label(format!("(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
+    let mi = gtk::MenuItem::with_label(format!("pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
     //mi.connect_activate(tray_menu_item_clicked);
     menu.append(&mi);
 
