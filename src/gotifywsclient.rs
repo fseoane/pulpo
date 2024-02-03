@@ -7,7 +7,7 @@ use ears::{Sound, AudioController};
 use crate::errors::PulpoError;
 //use crate::helpers::{get_cache_path, to_websocket};
 
-use log::{debug, info, warn};
+use log::{info, warn};
 use notify_rust::Notification;
 use serde::{Deserialize, Serialize};
 use tungstenite::Message;

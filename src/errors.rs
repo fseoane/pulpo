@@ -1,6 +1,5 @@
 use std::fmt;
 use url::{ParseError, Url};
-use std::env::VarError;
 use tungstenite::error::Error as TungError;
 
 

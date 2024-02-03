@@ -4,6 +4,7 @@ pub mod helpers;
 pub mod tray;
 pub mod config;
 pub mod gotifywsclient;
+pub mod ntfyhttpclient;
 
 use crate::{
     args::Args,
@@ -12,16 +13,11 @@ use crate::{
     tray::build_tray_menu, 
     gotifywsclient::GotifyWSClient,
     helpers::{base_url, to_websocket},
+    ntfyhttpclient,
 };
 
-use std::path::Path;
-use std::time::Duration;
-use std::env::var;
-use chrono::{DateTime, Utc};
-
-
-use log::{info, warn};
-use url::{ParseError, Url};
+use log::info;
+use url::Url;
 use daemonize::Daemonize;
 
 type Result<T> = std::result::Result<T, PulpoError>;
@@ -48,6 +44,7 @@ fn log_gotify_messages(args: Args) -> Result<()> {
         daemonize.start()?;
     }
 
+    //Creating the client and looping
     info!("Creating gotify client");
     let gdnd_cli = GotifyWSClient::new(ws_url, tokn, None);
     match gdnd_cli.run_loop(poll,sound.as_str(),icon.as_str()) {
@@ -66,8 +63,8 @@ fn main(){
     let path_and_prog_name = cmdline[0].as_str();
     let filename_start = path_and_prog_name.rfind('/').unwrap();
     let prog_name = &path_and_prog_name[(filename_start+1)..];
-    let mut fg: bool = false;
-    let fg_option: &str = "-f";
+    let mut fg: bool = true;
+    let fg_option: &str = "-d";
     let config_option: &str = "-c";
     let help_option1: &str = "-h";
     let help_option2: &str = "--help";
@@ -81,7 +78,7 @@ fn main(){
         println!("    Options:");
         println!("        -h        : This help.");
         println!("        --help");
-        println!("        -f        : To run the program in foreground (not daemonized).");
+        println!("        -d        : To run the program in background (daemonized).");
         println!("    Optional config file:");
         println!("        -c <file> : Specify the config file");
         println!("                    NOTE: By default config file is /etc/pulpo.conf");
@@ -93,7 +90,7 @@ fn main(){
 
     // Only one parameter (after the parameter 0 corresponding to the program name itself)
     if cmdline.iter().any(|i| i==fg_option) {  // tag = -f (run in foreground - not daemonized)
-        fg = true;
+        fg = false;
     };
     
     if cmdline.iter().any(|i| i==config_option) {  // tag = -f (run in foreground - not daemonized)
@@ -107,6 +104,7 @@ fn main(){
     println!("Reading config from:            {}", config_filename); 
     println!("------------------------------------------------------------------------");
     let configdata: ConfigData = read_config(config_filename);
+    
     // Print out the values to `stdout`.
     println!("    config/tray_icon:           {}", configdata.config.tray_icon); 
     println!("    gotify/gotify_url:          {}", configdata.gotify.gotify_url);
@@ -142,7 +140,9 @@ fn main(){
         foreground: fg,
     };
 
-    let tray_icon = configdata.config.tray_icon.as_str();
+    ntfyhttpclient::print_messages();
+
+    let _tray_icon = configdata.config.tray_icon.as_str();
     let tray_thread = || {
         //build_tray_menu(icon_filename);
         build_tray_menu(config_filename,configdata);

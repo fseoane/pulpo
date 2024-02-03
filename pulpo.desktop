@@ -7,4 +7,4 @@ Categories=X-Notification;
 Path=/opt/pulpo
 Icon=/opt/pulpo//resources/pulpo.svg
 Icon[en_US]=/opt/pulpo/resources/pulpo.svg
-Exec=/opt/pulpo/pulpo -f -c /etc/pulpo.conf
+Exec=/opt/pulpo/pulpo -c /etc/pulpo.conf

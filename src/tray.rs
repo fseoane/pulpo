@@ -3,22 +3,26 @@ use crate::config;
 use std::env;
 
 use std::path::Path;
-use appindicator3::{prelude::*, IndicatorBuilder, IndicatorStatus};
+use appindicator3::{prelude::*, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
 use gtk::{prelude::*, MenuItem};
-use serde_derive::Deserialize;
 use open;
 
 // -----------------------------------------------------------------------------------------------
+#[allow(dead_code)]
+fn toggle_sensitivity (widget: &gtk::Widget) {
+    widget.set_sensitive(!widget.is_sensitive());
+}
 
 fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
-fn tray_menu_item_open_webbrowser(item: &MenuItem, url: &str) {
-    open::that(url);
+fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
+    let _ = open::that(url);
 }
 
+#[allow(dead_code)]
 fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     let menu = gtk::Menu::new();
 
@@ -29,9 +33,9 @@ fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     let prev_mi = mi;
     let mi = gtk::MenuItem::with_label("Sub 2");
     
-    // mi.connect_activate(glib::clone!(@weak prev_mi => move |_| {
-    //     toggle_sensitivity(&prev_mi.upcast::<gtk::Widget>());
-    // }));
+    mi.connect_activate(glib::clone!(@weak prev_mi => move |_| {
+        toggle_sensitivity(&prev_mi.upcast::<gtk::Widget>());
+    }));
 
     menu.append(&mi);
 
