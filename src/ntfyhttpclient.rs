@@ -16,6 +16,7 @@ type Result<T> = std::result::Result<T, PulpoError>;
 pub struct NtfyMessage {
     id: String,
     time: u64,
+    expires: u64,
     event: String,
     topic: String,
     title: String,
@@ -33,8 +34,8 @@ pub struct NtfyHTTPClient {
 impl NtfyHTTPClient {
     pub fn new(url: Url, topics: String) -> Self {
         NtfyHTTPClient {
-            url,
-            topics,
+            url: url,
+            topics: topics,
         }
     }
 
@@ -49,7 +50,7 @@ impl NtfyHTTPClient {
         while snd.is_playing() {}
     }
 
-    pub async fn run_loop(poll: u64,notif_sound: &str,notif_icon: &str) -> Result<()> {
+    pub async fn run_loop(&self,poll: u64,notif_sound: &str,notif_icon: &str) -> Result<()> {
         
         // let resp = match reqwest::get(url_to_request.as_str()).await {
         //     Ok(resp) => resp.text().await.unwrap(),
@@ -61,12 +62,12 @@ impl NtfyHTTPClient {
         loop {
             // attempt to read from the socket
             // let message: Option<GotifyMessage> = match socket.read_message()? {
-            let message: Option<NtfyMessage> = match reqwest::get(http_url).await? {
-                reqwest::Response(s) => {
+            let message: Option<NtfyMessage> = match reqwest::get(http_url).await {
+                reqwest::Result::Ok(s) => {
                     info!("Message received");
-                    Some(serde_json::from_str(&s))
+                    Some(serde_json::from_str(&s.text().as_str()))
                 }
-                _ => None,
+                reqwest::Result::Err(e) => None,
             };
 
             // if a message was received create a notification
