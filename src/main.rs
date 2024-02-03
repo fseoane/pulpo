@@ -7,7 +7,7 @@ pub mod gotifywsclient;
 pub mod ntfyhttpclient;
 
 use crate::{
-    args::Args,
+    args::{Args,GotifyArgs,NtfyArgs},
     errors::PulpoError,
     config::{ConfigData,read_config}, 
     tray::build_tray_menu, 
@@ -24,10 +24,10 @@ type Result<T> = std::result::Result<T, PulpoError>;
 
 // --------------------------------------------------------------------------------------------------
 
-fn log_gotify_messages(args: Args) -> Result<()> {
+fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     // make sure the URL is clean
-    let url = base_url(&args.gotify_url)?;
-    let ws_url = to_websocket(url.clone())?;
+    let url = helpers::base_url(&args.gotify_url)?;
+    let ws_url = helpers::to_websocket(url.clone())?;
     let tokn = args.gotify_token.clone().unwrap();
     let poll = args.poll;
     let sound = args.gotify_sound.clone().unwrap();
@@ -54,15 +54,16 @@ fn log_gotify_messages(args: Args) -> Result<()> {
 
 }
 
-fn log_ntfy_messages(args: Args) -> Result<()> {
+fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     // make sure the URL is clean
-    let url = base_url(&args.ntfy_url)?;
+    let url = helpers::base_url(&args.ntfy_url)?;
     let topics = args.ntfy_topics.clone().unwrap();
-    let url_to_request = to_ntfyurl(url.clone(), topics).unwrap();
+    let url_to_request = helpers::to_ntfyurl(url.clone(), topics.clone()).unwrap();
     
     let poll = args.poll;
     let sound = args.ntfy_sound.clone().unwrap();
     let icon = args.ntfy_icon.clone().unwrap();
+
 
     info!("Starting ntfy with {} and topics {}",url,topics);
     info!("...and will poll every {} seconds",poll);
@@ -72,11 +73,8 @@ fn log_ntfy_messages(args: Args) -> Result<()> {
     //Creating the client and looping
     info!("Creating ntfy client");
     let ntfy_cli = NtfyHTTPClient::new(url_to_request, topics);
-    match ntfy_cli.run_loop(poll,sound.as_str(),icon.as_str()) {
-        Ok(_) => return Ok(()),
-        Err(e) => return Err(e),
-    }
-
+    let _ = ntfy_cli.run_loop(poll,sound.as_str(),icon.as_str());
+    return Ok(());
 }
 
 
@@ -152,11 +150,16 @@ fn main(){
     let nfy_sound = configdata.ntfy.ntfy_sound.as_str();
     let nfy_icon = configdata.ntfy.ntfy_icon.as_str();
     
-    let args = Args { 
+    let gotify_args = GotifyArgs { 
         gotify_token: Some(got_token.to_string()), 
         gotify_url: got_url.unwrap(),
         gotify_sound: Some(got_sound.to_string()),
         gotify_icon: Some(got_icon.to_string()),
+        poll: 5,
+        foreground: fg,
+    };
+
+    let ntfy_args = NtfyArgs { 
         ntfy_url: nfy_url.unwrap(),
         ntfy_topics: Some(nfy_topics.to_string()), 
         ntfy_sound: Some(nfy_sound.to_string()), 
@@ -165,24 +168,23 @@ fn main(){
         foreground: fg,
     };
 
-
-
     let _tray_icon = configdata.config.tray_icon.as_str();
     let tray_thread = || {
         //build_tray_menu(icon_filename);
         build_tray_menu(config_filename,configdata);
     };
 
+
+
     let gotify_thread = || {
-        let res: std::result::Result<(), PulpoError> = log_gotify_messages(args);
+        let res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
         info!("{}","Exiting");
         info!("{:#?}",res);
     };
 
     let ntfy_thread = || {
-        let res: std::result::Result<(), PulpoError> = log_ntfy_messages(args);
-        info!("{}","Exiting");
-        info!("{:#?}",res);
+        let _res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
+        //let _ = log_ntfy_messages(args);
     };
 
     std::thread::scope(|s| {

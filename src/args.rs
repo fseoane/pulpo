@@ -51,3 +51,57 @@ pub struct Args {
     //#[structopt(short = "F", long)]
     pub foreground: bool,
 }
+
+#[derive(Debug)]
+pub struct GotifyArgs {
+    /// Gotify client token: If used username password and client are not needed
+    //#[structopt(short = "t", long, env = "GDND_TOKEN")]
+    pub gotify_token: Option<String>,
+
+    /// Gotify server url
+    //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
+    pub gotify_url: Url,
+
+    /// Gotify notification sound
+    //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
+    pub gotify_sound: Option<String>,
+    
+    /// Gotify notification icon
+    //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
+    pub gotify_icon: Option<String>,
+
+    /// Time between polling the gotify server in seconds
+    //#[structopt(short = "P", long, default_value = "1", env = "GDND_POLL")]
+    pub poll: u64,
+
+    /// Run GDND in the foreground
+    //#[structopt(short = "F", long)]
+    pub foreground: bool,
+}
+
+#[derive(Debug)]
+pub struct NtfyArgs {
+    /// Ntfy server url
+    //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
+    pub ntfy_url: Url,
+
+    /// Ntfy topics 
+    //#[structopt(short = "t", long, env = "GDND_TOKEN")]
+    pub ntfy_topics: Option<String>,
+    
+    /// Ntfy notification sound
+    //#[structopt(short = "t", long, env = "GDND_TOKEN")]
+    pub ntfy_sound: Option<String>,
+
+    /// Ntfy notification icon
+    //#[structopt(short = "t", long, env = "GDND_TOKEN")]
+    pub ntfy_icon: Option<String>,
+
+    /// Time between polling the gotify server in seconds
+    //#[structopt(short = "P", long, default_value = "1", env = "GDND_POLL")]
+    pub poll: u64,
+
+    /// Run GDND in the foreground
+    //#[structopt(short = "F", long)]
+    pub foreground: bool,
+}
