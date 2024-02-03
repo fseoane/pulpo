@@ -51,7 +51,7 @@ impl NtfyHTTPClient {
         while snd.is_playing() {}
     }
 
-    pub async fn run_loop(&self,poll: u64,notif_sound: &str,notif_icon: &str) -> Result<()> {
+    pub fn run_loop(&self,poll: u64,notif_sound: &str,notif_icon: &str) -> Result<()> {
         
         // let resp = match reqwest::get(url_to_request.as_str()).await {
         //     Ok(resp) => resp.text().await.unwrap(),
@@ -59,6 +59,7 @@ impl NtfyHTTPClient {
         // };
         // println!("{}", resp)
         let http_url = self.url.clone();
+        println!("{}",http_url);
 
         loop {
             // attempt to read from the url
@@ -70,7 +71,8 @@ impl NtfyHTTPClient {
             //     reqwest::Result::Err(e) => None
             // };
             
-            let content =  reqwest::get(http_url.as_str()).await;
+            //let content =  reqwest::get(http_url.as_str()).await;
+            let content =  reqwest::blocking::get(http_url.as_str());
             println!("{:#?}",content);
 
             // let message: Option<NtfyMessage> = Some(serde_json::from_str(content..ok().unwrap()));

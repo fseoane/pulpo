@@ -64,7 +64,6 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     let sound = args.ntfy_sound.clone().unwrap();
     let icon = args.ntfy_icon.clone().unwrap();
 
-
     info!("Starting ntfy with {} and topics {}",url,topics);
     info!("...and will poll every {} seconds",poll);
 
@@ -173,8 +172,6 @@ fn main(){
         //build_tray_menu(icon_filename);
         build_tray_menu(config_filename,configdata);
     };
-
-
 
     let gotify_thread = || {
         let res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
