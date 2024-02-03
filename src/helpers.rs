@@ -46,6 +46,16 @@ pub fn to_websocket(url: Url) -> Result<Url> {
     Ok(ws_url)
 }
 
+/// Take a Url and convert it to a websocket url.
+pub fn to_ntfyurl(url: Url,topics: String) -> Result<Url> {
+
+    let mut ws_url = url.clone();
+    ws_url.set_path(topics.as_str());
+    ws_url.set_path("json");
+
+    Ok(ws_url)
+}
+
 /// Create the path for writing the json file for the client cache
 ///
 /// The default path is $HOME/.cache/gdnd
