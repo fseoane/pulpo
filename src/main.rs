@@ -42,8 +42,8 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        let _ = daemonize.execute();
-        //daemonize.start()?;
+        //let _ = daemonize.execute();
+        daemonize.start()?;
     }
 
     //Creating the client and looping
@@ -74,8 +74,8 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        let _ = daemonize.execute();
-        //daemonize.start()?;
+        //let _ = daemonize.execute();
+        daemonize.start()?;
     }
 
     //Creating the client and looping
@@ -144,7 +144,7 @@ fn main(){
 
     let mut nfy_url: Url;
     let mut nfy_topics: &str;
-    let mut nfy_sound: &str;;
+    let mut nfy_sound: &str;
     let mut nfy_icon: &str;
 
     println!("Reading config from:            {}", config_filename); 
@@ -160,7 +160,7 @@ fn main(){
     //if Some(pulpo::config::ConfigData configdata.config) 
     if configdata.gotify.unwrap().gotify_url.len()>0 {
         has_gotify_config = true;
-        got_url = Url::parse(configdata.gotify.unwrap().gotify_url.as_str());
+        got_url = url::Url::parse(configdata.gotify.unwrap().gotify_url);
         got_token = configdata.gotify.unwrap().gotify_client_token.as_str();
         got_sound = configdata.gotify.unwrap().gotify_sound.as_str();
         got_icon = configdata.gotify.unwrap().gotify_icon.as_str();

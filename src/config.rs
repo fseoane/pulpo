@@ -1,5 +1,3 @@
-
-
 // Import the required dependencies.
 use serde_derive::Deserialize;
 use std::fs;
