@@ -134,8 +134,8 @@ fn main(){
 
     let mut has_gotify_config: bool = false;
     let mut has_ntfy_config: bool = false;
-    let mut gotify_args: GotifyArgs;
-    let mut ntfy_args: NtfyArgs;
+    let gotify_args: GotifyArgs;
+    let ntfy_args: NtfyArgs;
 
     let mut got_url;
     let mut got_token: &str;
@@ -180,14 +180,10 @@ fn main(){
         // println!("    gotify/gotify_client_token: {}", got_token);
         // println!("    gotify/gotify_sound:        {}", got_sound);
         // println!("    gotify/gotify_icon:         {}", got_icon);
-        let gotify_thread = || {
-            let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
-            info!("{}","Exiting");
-            info!("Gotify result: {:#?}",gtfy_res);
-        };
 
     };
 
+    let ntfy_cfg = configdata.ntfy.as_ref().unwrap().clone();
     if configdata.ntfy.as_ref().unwrap().ntfy_url.len()>0  {
         has_ntfy_config = true;
         nfy_url = Url::parse(configdata.ntfy.as_ref().unwrap().ntfy_url.as_str());
@@ -211,11 +207,7 @@ fn main(){
         // println!("    ntfy/ntfy_topics:           {}", nfy_topics);
         // println!("    ntfy/ntfy_sound:            {}", nfy_sound);
         // println!("    ntfy/ntfy_icon:             {}", nfy_icon);
-        let ntfy_thread = || {
-            let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
-            info!("{}","Exiting");
-            info!("Ntfy result: {:#?}",ntfy_res);
-        };
+
     };
     println!("------------------------------------------------------------------------");
     println!(" ");
@@ -235,11 +227,11 @@ fn main(){
     };
 
     if has_gotify_config && !has_ntfy_config{
-        // let gotify_thread = || {
-        //     let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
-        //     info!("{}","Exiting");
-        //     info!("Gotify result: {:#?}",gtfy_res);
-        // };
+        let gotify_thread = || {
+            let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
+            info!("{}","Exiting");
+            info!("Gotify result: {:#?}",gtfy_res);
+        };
         std::thread::scope(|s| {
             s.spawn(tray_thread);
             s.spawn(gotify_thread);
@@ -248,11 +240,11 @@ fn main(){
     };
 
     if !has_gotify_config && has_ntfy_config{
-        // let ntfy_thread = || {
-        //     let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
-        //     info!("{}","Exiting");
-        //     info!("Ntfy result: {:#?}",ntfy_res);
-        // };
+        let ntfy_thread = || {
+            let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
+            info!("{}","Exiting");
+            info!("Ntfy result: {:#?}",ntfy_res);
+        };
         std::thread::scope(|s| {
             s.spawn(tray_thread);
             s.spawn(ntfy_thread);
@@ -260,16 +252,16 @@ fn main(){
     };
 
     if has_gotify_config && has_ntfy_config{
-        // let gotify_thread = || {
-        //     let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
-        //     info!("{}","Exiting");
-        //     info!("Gotify result: {:#?}",gtfy_res);
-        // };
-        // let ntfy_thread = || {
-        //     let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
-        //     info!("{}","Exiting");
-        //     info!("Ntfy result: {:#?}",ntfy_res);
-        // };
+        let gotify_thread = || {
+            let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
+            info!("{}","Exiting");
+            info!("Gotify result: {:#?}",gtfy_res);
+        };
+        let ntfy_thread = || {
+            let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
+            info!("{}","Exiting");
+            info!("Ntfy result: {:#?}",ntfy_res);
+        };
         std::thread::scope(|s| {
             s.spawn(tray_thread);
             s.spawn(gotify_thread);
