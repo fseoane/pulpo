@@ -68,14 +68,32 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
     // Set your application name and icon
     let app_name: &str = "pulpo";
     let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");//"/home/efe/Dev/RustLearning/read_config_from_toml_file/resources"; //"notification.png";
-    let tray_icon= configdata.config.tray_icon.as_str(); 
-    let gotify_url = configdata.gotify.gotify_url;
-    let gotify_token = configdata.gotify.gotify_client_token;
-    let ntfy_url = configdata.ntfy.ntfy_url;
-    let ntfy_topics = configdata.ntfy.ntfy_topics;
+    let tray_icon= configdata.config.tray_icon.as_str();
 
-    let got_url = gotify_url.clone();
-    let nfy_url = ntfy_url.clone();
+    let mut has_gotify_config: bool = false;
+    let mut has_ntfy_config: bool = false;
+    let mut got_token: &str = "";
+    let mut got_url: &str = "";
+    let mut nfy_topics: &str = "";
+    let mut nfy_url:&str = "";
+
+    //let config = configdata.clone();
+
+    if configdata.gotify.unwrap().gotify_url.clone().len()>0 {
+        has_gotify_config = true;
+        //gotify_url = configdata.gotify.unwrap().gotify_url.clone().as_str();
+        got_token = configdata.gotify.unwrap().gotify_client_token.clone().as_str();
+        got_url = configdata.gotify.unwrap().gotify_url.clone().as_str();
+        nfy_topics = "";
+        nfy_url = "";
+    };
+    if configdata.ntfy.unwrap().ntfy_url.clone().len()>0 {
+        has_ntfy_config = true;
+        got_token = "";
+        got_url = "";
+        nfy_url = configdata.ntfy.unwrap().ntfy_url.clone().as_str();
+        nfy_topics = configdata.ntfy.unwrap().ntfy_topics.clone().as_str();
+    };
 
     // Initialize GTK
     gtk::init().expect("Failed to initialize GTK.");
@@ -100,18 +118,22 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
 
     let menu_item = gtk::SeparatorMenuItem::default();
     menu.append(&menu_item);
+    
+    if has_gotify_config{
+        let menu_item = gtk::MenuItem::with_label("Open Gotify");
+        menu_item.connect_activate( |item|{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), got_url)
+        });
+        menu.append(&menu_item);
+    };
 
-    let menu_item = gtk::MenuItem::with_label("Open Gotify");
-    menu_item.connect_activate(move |item|{
-        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), got_url.as_str())
-    });
-    menu.append(&menu_item);
-
-    let menu_item = gtk::MenuItem::with_label("Open Ntfy");
-    menu_item.connect_activate(move |item|{
-        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url.as_str())
-    });
-    menu.append(&menu_item);
+    if has_gotify_config{
+        let menu_item = gtk::MenuItem::with_label("Open Ntfy");
+        menu_item.connect_activate( |item|{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url)
+        });
+        menu.append(&menu_item);
+    };
 
     let menu_item = gtk::SeparatorMenuItem::default();
     menu.append(&menu_item);
@@ -120,7 +142,7 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
     // menu_item.connect_activate(|menu_item|{
     //     tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
     // });
-    tray_menu_append_about_submenu(&menu_item,config_file,gotify_url.as_str(),gotify_token.as_str(),ntfy_url.as_str(),ntfy_topics.as_str());
+    tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Quit");

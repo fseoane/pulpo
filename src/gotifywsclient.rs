@@ -88,14 +88,16 @@ impl GotifyWSClient {
         let query = format!("token={}", self.token);
         ws_url.set_query(Some(&query));
 
-        info!("Websocket url: {}", ws_url);
-        //println!("Websocket url: {}", ws_url);
+        info!("Gotify websocket url: {}", ws_url);
+        println!("Gotify websocket url: {}", ws_url);
 
         let (mut socket, _response) = tungstenite::connect(&ws_url)?;
 
-        info!("Connected to {}", self.ws_url);
-        //println!("Connected to {}", ws_url);
-
+        if socket.can_read(){
+            info!("Connected to Gotify at {}", self.ws_url);
+            println!("Connected to Gotify at {}", ws_url);
+        }
+        
         loop {
             // attempt to read from the socket
             // let message: Option<GotifyMessage> = match socket.read_message()? {
@@ -117,7 +119,8 @@ impl GotifyWSClient {
                     
                 GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
     
-                info!("[!] Message received | title:{} message:{}",m.title,m.message);
+                info!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
+                println!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
                 // if the notification fails some how log it but do not kill the process
                 // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
                 // threshhold

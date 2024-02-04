@@ -12,8 +12,8 @@ use toml;
 #[derive(Deserialize)]
 pub struct ConfigData {
     pub config: GeneralConfig,
-	pub gotify: GotifyConf,
-	pub ntfy: NtfyConf,
+	pub gotify: Option<GotifyConf>,
+	pub ntfy: Option<NtfyConf>,
 }
 
 // Config struct holds to data from the `[config]` section.
