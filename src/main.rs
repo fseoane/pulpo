@@ -166,7 +166,7 @@ fn main(){
         got_icon = configdata.gotify.unwrap().gotify_icon.clone().as_str();
         gotify_args = GotifyArgs { 
             gotify_token: Some(got_token.to_string()), 
-            gotify_url: got_url,
+            gotify_url: got_url.unwrap(),
             gotify_sound: Some(got_sound.to_string()),
             gotify_icon: Some(got_icon.to_string()),
             poll: 5,
@@ -187,7 +187,7 @@ fn main(){
         nfy_icon = configdata.ntfy.unwrap().ntfy_icon.clone().as_str();
         
         ntfy_args = NtfyArgs { 
-            ntfy_url: nfy_url,
+            ntfy_url: nfy_url.unwrap(),
             ntfy_topics: Some(nfy_topics.to_string()), 
             ntfy_sound: Some(nfy_sound.to_string()), 
             ntfy_icon: Some(nfy_icon.to_string()), 
