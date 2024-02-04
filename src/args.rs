@@ -13,7 +13,7 @@ use url::Url;
 pub struct Args {
     /// Gotify client token: If used username password and client are not needed
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub gotify_token: Option<String>,
+    pub gotify_token: String,
 
     /// Gotify server url
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
@@ -21,11 +21,11 @@ pub struct Args {
 
     /// Gotify notification sound
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
-    pub gotify_sound: Option<String>,
+    pub gotify_sound: String,
     
     /// Gotify notification icon
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
-    pub gotify_icon: Option<String>,
+    pub gotify_icon: String,
 
     /// Ntfy server url
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
@@ -33,15 +33,15 @@ pub struct Args {
 
     /// Ntfy topics 
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_topics: Option<String>,
+    pub ntfy_topics: String,
     
     /// Ntfy notification sound
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_sound: Option<String>,
+    pub ntfy_sound: String,
 
     /// Ntfy notification icon
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_icon: Option<String>,
+    pub ntfy_icon: String,
 
     /// Time between polling the gotify server in seconds
     //#[structopt(short = "P", long, default_value = "1", env = "GDND_POLL")]
@@ -56,7 +56,7 @@ pub struct Args {
 pub struct GotifyArgs {
     /// Gotify client token: If used username password and client are not needed
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub gotify_token: Option<String>,
+    pub gotify_token: String,
 
     /// Gotify server url
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
@@ -64,11 +64,11 @@ pub struct GotifyArgs {
 
     /// Gotify notification sound
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
-    pub gotify_sound: Option<String>,
+    pub gotify_sound: String,
     
     /// Gotify notification icon
     //#[structopt(short, long, env = "GDND_URL", parse(try_from_str = Url::parse))]
-    pub gotify_icon: Option<String>,
+    pub gotify_icon: String,
 
     /// Time between polling the gotify server in seconds
     //#[structopt(short = "P", long, default_value = "1", env = "GDND_POLL")]
@@ -87,15 +87,15 @@ pub struct NtfyArgs {
 
     /// Ntfy topics 
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_topics: Option<String>,
+    pub ntfy_topics: String,
     
     /// Ntfy notification sound
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_sound: Option<String>,
+    pub ntfy_sound: String,
 
     /// Ntfy notification icon
     //#[structopt(short = "t", long, env = "GDND_TOKEN")]
-    pub ntfy_icon: Option<String>,
+    pub ntfy_icon: String,
 
     /// Time between polling the gotify server in seconds
     //#[structopt(short = "P", long, default_value = "1", env = "GDND_POLL")]
