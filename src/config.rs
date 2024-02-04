@@ -1,5 +1,5 @@
 // Import the required dependencies.
-use serde_derive::Deserialize;
+use serde_derive::{Serialize, Deserialize};
 use std::fs;
 use toml;
 //use std::path::Path;
@@ -7,7 +7,7 @@ use toml;
 
 
 // Top level struct to hold the TOML data.
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct ConfigData {
     pub config: GeneralConfig,
 	pub gotify: Option<GotifyConf>,
@@ -15,13 +15,13 @@ pub struct ConfigData {
 }
 
 // Config struct holds to data from the `[config]` section.
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct GeneralConfig {
     pub tray_icon: String,
 }
 
 // Config struct holds to data from the `[gotify]` section.
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct GotifyConf {
 	pub gotify_url: String,
 	pub gotify_client_token: String,
@@ -30,7 +30,7 @@ pub struct GotifyConf {
 }
 
 // Config struct holds to data from the `[ntfy]` section.
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct NtfyConf {
 	pub ntfy_url: String,
 	pub ntfy_topics: String,

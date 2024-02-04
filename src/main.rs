@@ -18,7 +18,7 @@ use crate::{
 };
 
 use log::info;
-use url::Url;
+use url::{Url, ParseError};
 use daemonize::Daemonize;
 
 type Result<T> = std::result::Result<T, PulpoError>;
@@ -42,8 +42,8 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        //let _ = daemonize.execute();
-        daemonize.start()?;
+        let _ = daemonize.execute();
+        //daemonize.start()?;
     }
 
     //Creating the client and looping
@@ -74,8 +74,8 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        //let _ = daemonize.execute();
-        daemonize.start()?;
+        let _ = daemonize.execute();
+        //daemonize.start()?;
     }
 
     //Creating the client and looping
@@ -137,12 +137,12 @@ fn main(){
     let mut gotify_args: GotifyArgs;
     let mut ntfy_args: NtfyArgs;
 
-    let mut got_url: Url;
+    let mut got_url;
     let mut got_token: &str;
     let mut got_sound: &str;
     let mut got_icon: &str;
 
-    let mut nfy_url: Url;
+    let mut nfy_url;
     let mut nfy_topics: &str;
     let mut nfy_sound: &str;
     let mut nfy_icon: &str;
@@ -160,10 +160,10 @@ fn main(){
     //if Some(pulpo::config::ConfigData configdata.config) 
     if configdata.gotify.unwrap().gotify_url.len()>0 {
         has_gotify_config = true;
-        got_url = url::Url::parse(configdata.gotify.unwrap().gotify_url);
-        got_token = configdata.gotify.unwrap().gotify_client_token.as_str();
-        got_sound = configdata.gotify.unwrap().gotify_sound.as_str();
-        got_icon = configdata.gotify.unwrap().gotify_icon.as_str();
+        got_url = Url::parse(configdata.gotify.unwrap().gotify_url.clone().as_str());
+        got_token = configdata.gotify.unwrap().gotify_client_token.clone().as_str();
+        got_sound = configdata.gotify.unwrap().gotify_sound.clone().as_str();
+        got_icon = configdata.gotify.unwrap().gotify_icon.clone().as_str();
         gotify_args = GotifyArgs { 
             gotify_token: Some(got_token.to_string()), 
             gotify_url: got_url,
@@ -172,7 +172,7 @@ fn main(){
             poll: 5,
             foreground: fg,
         };
-        println!("    gotify/gotify_url:          {}", got_url.as_str());
+        println!("    gotify/gotify_url:          {}", got_url.unwrap().as_str());
         println!("    gotify/gotify_client_token: {}", got_token);
         println!("    gotify/gotify_sound:        {}", got_sound);
         println!("    gotify/gotify_icon:         {}", got_icon);
@@ -181,10 +181,10 @@ fn main(){
 
     if configdata.ntfy.unwrap().ntfy_url.len()>0  {
         has_ntfy_config = true;
-        nfy_url = Url::parse(configdata.ntfy.unwrap().ntfy_url.as_str());
-        nfy_topics = configdata.ntfy.unwrap().ntfy_topics.as_str();
-        nfy_sound = configdata.ntfy.unwrap().ntfy_sound.as_str();
-        nfy_icon = configdata.ntfy.unwrap().ntfy_icon.as_str();
+        nfy_url = Url::parse(configdata.ntfy.unwrap().ntfy_url.clone().as_str());
+        nfy_topics = configdata.ntfy.unwrap().ntfy_topics.clone().as_str();
+        nfy_sound = configdata.ntfy.unwrap().ntfy_sound.clone().as_str();
+        nfy_icon = configdata.ntfy.unwrap().ntfy_icon.clone().as_str();
         
         ntfy_args = NtfyArgs { 
             ntfy_url: nfy_url,
@@ -194,7 +194,7 @@ fn main(){
             poll: 5,
             foreground: fg,
         };
-        println!("    ntfy/ntfy_url:              {}", nfy_url.as_str());
+        println!("    ntfy/ntfy_url:              {}", nfy_url.unwrap().as_str());
         println!("    ntfy/ntfy_topics:           {}", nfy_topics);
         println!("    ntfy/ntfy_sound:            {}", nfy_sound);
         println!("    ntfy/ntfy_icon:             {}", nfy_icon);
