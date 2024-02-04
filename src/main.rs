@@ -42,7 +42,7 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        daemonize.execute()?;
+        daemonize.execute();
         //daemonize.start()?;
     }
 
@@ -74,7 +74,7 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     if !args.foreground{
         info!("Starting daemon.");
         let daemonize = Daemonize::new();
-        daemonize.execute()?;
+        daemonize.execute();
         //daemonize.start()?;
     }
 
