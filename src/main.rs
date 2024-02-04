@@ -183,7 +183,7 @@ fn main(){
 
     };
 
-    let ntfy_cfg = configdata.ntfy.as_ref().unwrap().clone();
+    //let ntfy_cfg = configdata.ntfy.as_ref().unwrap().clone();
     if configdata.ntfy.as_ref().unwrap().ntfy_url.len()>0  {
         has_ntfy_config = true;
         nfy_url = Url::parse(configdata.ntfy.as_ref().unwrap().ntfy_url.as_str());
