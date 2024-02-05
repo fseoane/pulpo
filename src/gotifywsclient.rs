@@ -1,4 +1,5 @@
 
+use std::env;
 use std::thread;
 use std::time::Duration;
 extern crate ears;
@@ -111,26 +112,34 @@ impl GotifyWSClient {
 
             // if a message was received create a notification
             if let Some(m) = message {
-                let notif = Notification::new()
-                    .summary(&m.title)
-                    .body(&m.message)
-                    .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-                    .show();
-                    
-                GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
-    
                 info!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
-                println!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
-                // if the notification fails some how log it but do not kill the process
-                // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
-                // threshhold
-                match notif {
-                    Ok(_) => info!(
-                        "Sent desktop notification: title: {} message: {}",
-                        m.title, m.message
-                    ),
-                    Err(e) => warn!("Failed to send desktop notification: {}", e),
-                }
+                // println!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
+
+                if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
+                    GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
+                };
+                if std::env::var("DND").unwrap()=="off"{
+                    let notif = Notification::new()
+                        .summary(&m.title)
+                        .body(&m.message)
+                        .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+                        .show();
+
+                    // if the notification fails some how log it but do not kill the process
+                    // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
+                    // threshhold
+                    match notif {
+                        Ok(_) => info!(
+                            "Sent desktop notification: title: {} message: {}",
+                            m.title, m.message
+                        ),
+                        Err(e) => warn!("Failed to send desktop notification: {}", e),
+                    }
+                };  
+
+
+
+                
             }
 
             thread::sleep(Duration::from_secs(poll));

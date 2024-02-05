@@ -19,6 +19,28 @@ fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
+fn tray_silent_clicked(_item: &MenuItem) {
+    let current = std::env::var("SILENT").unwrap();
+    println!("SILENT current:{}",current);
+    if current=="on"{
+        env::set_var("SILENT", String::from("off"));
+    } else if current=="off"{
+        env::set_var("SILENT", String::from("on"));
+    };
+    println!("SILENT after:{}",std::env::var("SILENT").unwrap());
+}
+
+fn tray_dnd_clicked(_item: &MenuItem) {
+    let current = std::env::var("DND").unwrap();
+    println!("DND current:{}",current);
+    if current=="on"{
+        env::set_var("DND", String::from("off"));
+    } else if current=="off"{
+        env::set_var("DND", String::from("on"));
+    };
+    println!("DND after:{}",std::env::var("DND").unwrap());
+}
+
 fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
     let _ = open::that(url);
 }
@@ -141,14 +163,14 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     // Create a menu items
     let menu_item = gtk::CheckMenuItem::with_label("Silent mode");
     menu_item.connect_activate(|item| {
-        tray_menu_item_clicked(item.upcast_ref::<gtk::MenuItem>())
+        tray_silent_clicked(item.upcast_ref::<gtk::MenuItem>())
     });
     menu.append(&menu_item);
     menu_item.show();
 
     let menu_item = gtk::CheckMenuItem::with_label("Do not disturb");
     menu_item.connect_activate(|item| {
-        tray_menu_item_clicked(item.upcast_ref::<gtk::MenuItem>())
+        tray_dnd_clicked(item.upcast_ref::<gtk::MenuItem>())
     });
     menu.append(&menu_item);
     menu_item.show();

@@ -1,4 +1,5 @@
 
+use std::env;
 use std::thread;
 use std::time::Duration;
 extern crate ears;
@@ -92,13 +93,13 @@ impl NtfyWSClient {
 
 
         info!("Ntfy websocket url: {}", ws_url);
-        println!("Ntfy websocket url: {}", ws_url);
+        // println!("Ntfy websocket url: {}", ws_url);
 
         let (mut socket, _response) = tungstenite::connect(&ws_url)?;
 
         if socket.can_read(){
             info!("Connected to Ntfy at {}", self.ws_url);
-            println!("Connected to Ntfy at {}", ws_url);
+            // println!("Connected to Ntfy at {}", ws_url);
         }
 
         loop {
@@ -119,33 +120,36 @@ impl NtfyWSClient {
                     let tit = m.title.clone().unwrap();
                     let messge = m.message.clone().unwrap();
 
-                    let notif = Notification::new()
-                        .summary(format!("{}/{}",&m.topic,&tit).as_str())
-                        .body(&messge)
-                        .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-                        .show();
-                        
-                    NtfyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
-        
                     info!("[!] Ntfy message received | title:{} message:{}",
                         format!("{}:{}",&m.topic,&tit).as_str(),
                         &messge
                     );
-                    println!("[!] Ntfy message received | topic/title:{} message:{}",
-                        format!("{}/{}",&m.topic,&tit).as_str(),
-                        &messge
-                    );
-                    // if the notification fails some how log it but do not kill the process
-                    // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
-                    // threshhold
-                    match notif {
-                        Ok(_) => info!(
-                            "Sent desktop notification: title: {} message: {}",
-                            format!("{}:{}",&m.topic,&tit).as_str(), 
-                            &messge
-                        ),
-                        Err(e) => warn!("Failed to send desktop notification: {}", e),
-                    }
+                    // println!("[!] Ntfy message received | topic/title:{} message:{}",
+                    //     format!("{}/{}",&m.topic,&tit).as_str(),
+                    //     &messge
+                    // ); 
+                    if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap()=="off"{
+                        NtfyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
+                    };
+                    if std::env::var("DND").unwrap()=="off"{
+                        let notif = Notification::new()
+                            .summary(format!("{}/{}",&m.topic,&tit).as_str())
+                            .body(&messge)
+                            .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+                            .show();
+                    
+                        // if the notification fails some how log it but do not kill the process
+                        // TO DO: Add tracking for the number of failaures and perhaps have it exit after a certain configurable
+                        // threshhold
+                        match notif {
+                            Ok(_) => info!(
+                                "Sent desktop notification: title: {} message: {}",
+                                format!("{}:{}",&m.topic,&tit).as_str(), 
+                                &messge
+                            ),
+                            Err(e) => warn!("Failed to send desktop notification: {}", e),
+                        }
+                    };
                 }
 
             }

@@ -19,6 +19,7 @@ use crate::{
     ntfywsclient::NtfyWSClient,
 };
 
+use std::env;
 use log::info;
 use url::Url;
 use daemonize::Daemonize;
@@ -105,6 +106,9 @@ fn main(){
     let config_option: &str = "-c";
     let help_option1: &str = "-h";
     let help_option2: &str = "--help";
+
+    env::set_var("SILENT", String::from("off"));
+    env::set_var("DND", String::from("off"));
 
     if cmdline.iter().any(|i| i==help_option1) || cmdline.iter().any(|i| i==help_option2) {
         println!(" ");
