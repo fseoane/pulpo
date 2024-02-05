@@ -23,10 +23,27 @@ use std::env;
 use log::info;
 use url::Url;
 use daemonize::Daemonize;
+use std::io::prelude::*;
+use std::net::TcpStream;
+use std::thread;
+use std::time::Duration;
 
 type Result<T> = std::result::Result<T, PulpoError>;
 
 // --------------------------------------------------------------------------------------------------
+fn active_internet_connection() -> bool {
+    // let mut stream = TcpStream::connect("8.8.8.8");
+
+    // stream.write(&[1]);
+    // stream.read(&mut [0; 128]);
+    // Ok((true))
+
+    match TcpStream::connect("8.8.8.8:53"){
+        std::io::Result::Ok(_s) => true,
+        std::io::Result::Err(_e) => false,
+    }
+
+}
 
 fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     // make sure the URL is clean
@@ -248,6 +265,16 @@ fn main(){
     };
     println!("------------------------------------------------------------------------");
     println!(" ");
+
+    // Wait for internet connection to be available
+    let mut counter = 0;
+    println!("Waiting for network connection.");
+    while counter < 12 && !active_internet_connection() { 
+        println!("{}",active_internet_connection());
+        thread::sleep(Duration::from_secs(5));
+        counter += 1;
+    };
+    println!("Network is avaible.");
 
     // let got_url = Url::parse(configdata.gotify.unwrap().gotify_url.as_str());
     // let got_token = configdata.gotify.unwrap().gotify_client_token.as_str();
