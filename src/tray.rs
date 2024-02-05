@@ -130,7 +130,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     if has_ntfy_config{
         let menu_item = gtk::MenuItem::with_label("Open Ntfy");
         menu_item.connect_activate( |item |{
-            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), n_url.as_str())
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url.as_str())
         });
         menu.append(&menu_item);
     };
