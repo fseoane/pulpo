@@ -210,13 +210,13 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     menu.append(&menu_item);
     
     let menu_item = gtk::MenuItem::with_label("About");
-    tray_menu_append_about_submenu2(
+    tray_menu_append_about_submenu(
         &menu_item,
-        config_file.clone(),
-        got_url.clone(),
-        got_token.clone(),
-        nfy_url.clone(),
-        nfy_topics.clone()
+        config_file,
+        got_url,
+        got_token,
+        nfy_url,
+        nfy_topics
     );
     //tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
