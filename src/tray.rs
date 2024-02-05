@@ -121,11 +121,8 @@ fn tray_menu_append_about_submenu (
 
     };
     
-
-
     //let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
     let mi = gtk::MenuItem::with_label(label.as_str());
-
 
     //mi.connect_activate(tray_menu_item_clicked);
     menu.append(&mi);
