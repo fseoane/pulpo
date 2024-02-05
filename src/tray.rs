@@ -87,39 +87,44 @@ fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, go
     parent.set_submenu(Some(&menu));
 }
 
-// fn tray_menu_append_about_submenu2 (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
-//     let menu = gtk::Menu::new();
+fn tray_menu_append_about_submenu2 (
+    parent: &gtk::MenuItem,
+    config_file: &str, 
+    gotify_url: &str,
+    gotify_token: &str,
+    ntfy_url: &str,
+    ntfy_topics: &str) {
 
-//     let app_and_author_str: &str = "pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\n";
-//     //let mut config_file_str: &str;
-//     let config_file: &str = config_file.clone();
-//     let config_file_str = format!("Config file:\t\t{}\n-----------\n",config_file);
+    let menu = gtk::Menu::new();
 
-//     let gotify_conf_url: &str = gotify_url.clone();
-//     let gotify_conf_token: &str = gotify_token.clone();
-//     let gotify_conf_str: &str;
+    let app_and_author_str: &str = "pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\n";
+    let config_file_str: String = format!("Config file:\t\t{}\n-----------\n",config_file);
+  
+    let gotify_conf_url: &str = gotify_url.clone();
+    let gotify_conf_token: &str = gotify_token.clone();
 
-//     if !String::from(gotify_url).is_empty() {
-//         gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token).as_str();
-//     };
+    let gotify_conf_str: String;
+    if !String::from(gotify_conf_url).is_empty() {
+        gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token);
+    };
 
-//     let ntfy_conf_url: &str = ntfy_url.clone();
-//     let ntfy_conf_topics: &str = ntfy_topics.clone();
-//     let ntfy_conf_str: &str;
- 
-//     if !String::from(ntfy_url).is_empty(){
-//         ntfy_conf_str = format!("Ntfy url:\t\t{}\nNtfy topics:\t\t{}",ntfy_conf_url,ntfy_conf_topics).as_str();
-//     };
+    let ntfy_conf_url: &str = ntfy_url.clone();
+    let ntfy_conf_topics: &str = ntfy_topics.clone();
+
+    let ntfy_conf_str: String;
+    if !String::from(ntfy_conf_url).is_empty(){
+        ntfy_conf_str = format!("Ntfy url:\t\t{}\nNtfy topics:\t\t{}",&ntfy_conf_url,&ntfy_conf_topics);
+    };
     
-//     let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
+    let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
 
-//     //mi.connect_activate(tray_menu_item_clicked);
-//     menu.append(&mi);
+    //mi.connect_activate(tray_menu_item_clicked);
+    menu.append(&mi);
 
-//     menu.show_all();
+    menu.show_all();
+    parent.set_submenu(Some(&menu));
 
-//     parent.set_submenu(Some(&menu));
-// }
+}
 
 
 //pub fn build_tray_menu<'l>(config_file: &str, tray_icon: &str, gotify_url: &'static str, gotify_token: &'static str,ntfy_url: &'static str, ntfy_topics: &'static str){
@@ -129,7 +134,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
 
     // Set your application name and icon
     let app_name: &str = "pulpo";
-    let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");//"/home/efe/Dev/RustLearning/read_config_from_toml_file/resources"; //"notification.png";
+    let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");
 
     let mut has_gotify_config: bool = false;
     let mut has_ntfy_config: bool = false;
@@ -140,10 +145,10 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     // let nfy_topics = String::from(ntfy_topics);
     
 
-    let got_url = gotify_url;
+    let got_url = gotify_url.clone();
     env::set_var("GOTIFY_URL", got_url);
 
-    let nfy_url = ntfy_url;
+    let nfy_url = ntfy_url.clone();
     env::set_var("NTFY_URL", nfy_url);
 
     let got_token = gotify_token;
@@ -199,8 +204,15 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     menu.append(&menu_item);
     
     let menu_item = gtk::MenuItem::with_label("About");
-    //tray_menu_append_about_submenu(&menu_item,config_file,got_url.as_str(),got_token.as_str(),nfy_url.as_str(),nfy_topics.as_str());
-    tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
+    tray_menu_append_about_submenu2(
+        &menu_item,
+        config_file.clone(),
+        got_url.clone(),
+        got_token.clone(),
+        nfy_url.clone(),
+        nfy_topics.clone()
+    );
+    //tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Quit");
