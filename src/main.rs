@@ -136,7 +136,7 @@ fn main(){
 
     let mut gotify_args= GotifyArgs { 
         gotify_token: String::from(""), 
-        gotify_url: url::Url::parse("").unwrap(),
+        gotify_url: url::Url::parse("https://1.1.1.1").unwrap(),
         gotify_sound: String::from(""),
         gotify_icon: String::from(""),
         poll: 5,
@@ -145,7 +145,7 @@ fn main(){
 
     let mut ntfy_args= NtfyArgs { 
         ntfy_topics: String::from(""), 
-        ntfy_url: url::Url::parse("").unwrap(),
+        ntfy_url: url::Url::parse("https://1.1.1.1").unwrap(),
         ntfy_sound: String::from(""),
         ntfy_icon: String::from(""),
         poll: 5,
