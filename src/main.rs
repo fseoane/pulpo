@@ -10,7 +10,7 @@ pub mod ntfywsclient;
 use crate::{
     args::{Args,GotifyArgs,NtfyArgs},
     errors::PulpoError,
-    config::{ConfigData,read_config}, 
+    config::{read_config,NtfyConf, ConfigData, GotifyConf}, 
     tray::build_tray_menu, 
     helpers::{base_url, to_websocket},
     gotifywsclient::GotifyWSClient,
@@ -151,19 +151,44 @@ fn main(){
     println!("------------------------------------------------------------------------");
     let configdata: ConfigData = read_config(config_filename);
     
+    let has_gotify_config= configdata.gotify.is_some();
+    let gotify_conf: GotifyConf;
+    if has_gotify_config{
+        gotify_conf = configdata.gotify.unwrap();
+    } else {
+        gotify_conf = GotifyConf { 
+            gotify_client_token: String::from(""), 
+            gotify_url: String::from(Url::parse("").unwrap()),
+            gotify_sound: String::from(""),
+            gotify_icon: String::from(""),
+        }
+    };
+    
+    let has_ntfy_config= configdata.ntfy.is_some();
+    let ntfy_conf: NtfyConf;
+    if has_ntfy_config {
+        ntfy_conf= configdata.ntfy.unwrap();
+    } else {
+        ntfy_conf = NtfyConf { 
+            ntfy_topics: String::from(""), 
+            ntfy_url: String::from(Url::parse("").unwrap()),
+            ntfy_sound: String::from(""),
+            ntfy_icon: String::from(""),
+        }
+    };
+
     if configdata.config.tray_icon.len()>0 {
         // Print out the values to `stdout`.
         println!("    config/tray_icon:           {}", configdata.config.tray_icon); 
     }
 
 
-    //if Some(pulpo::config::ConfigData configdata.config) 
-    if configdata.gotify.as_ref().unwrap().gotify_url.len()>0 {
-        has_gotify_config = true;
-        got_url = Url::parse(configdata.gotify.as_ref().unwrap().gotify_url.as_str());
-        got_token = configdata.gotify.as_ref().unwrap().gotify_client_token.as_str();
-        got_sound = configdata.gotify.as_ref().unwrap().gotify_sound.as_str();
-        got_icon = configdata.gotify.as_ref().unwrap().gotify_icon.as_str();
+    if has_gotify_config {
+    //if configdata.gotify.as_ref().unwrap().gotify_url.len()>0 {
+        got_url = Url::parse(gotify_conf.gotify_url.as_str());
+        got_token = gotify_conf.gotify_client_token.as_str();
+        got_sound = gotify_conf.gotify_sound.as_str();
+        got_icon = gotify_conf.gotify_icon.as_str();
         gotify_args = GotifyArgs { 
             gotify_token: String::from(got_token), 
             gotify_url: got_url.unwrap(),
@@ -184,12 +209,12 @@ fn main(){
     };
 
     //let ntfy_cfg = configdata.ntfy.as_ref().unwrap().clone();
-    if configdata.ntfy.as_ref().unwrap().ntfy_url.len()>0  {
-        has_ntfy_config = true;
-        nfy_url = Url::parse(configdata.ntfy.as_ref().unwrap().ntfy_url.as_str());
-        nfy_topics = configdata.ntfy.as_ref().unwrap().ntfy_topics.as_str();
-        nfy_sound = configdata.ntfy.as_ref().unwrap().ntfy_sound.as_str();
-        nfy_icon = configdata.ntfy.as_ref().unwrap().ntfy_icon.as_str();
+    if has_ntfy_config  {
+    //if configdata.ntfy.as_ref().unwrap().ntfy_url.len()>0  {
+        nfy_url = Url::parse(ntfy_conf.ntfy_url.as_str());
+        nfy_topics = ntfy_conf.ntfy_topics.as_str();
+        nfy_sound = ntfy_conf.ntfy_sound.as_str();
+        nfy_icon = ntfy_conf.ntfy_icon.as_str();
         
         ntfy_args = NtfyArgs { 
             ntfy_url: nfy_url.unwrap(),
