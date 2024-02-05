@@ -75,19 +75,19 @@ fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     parent.set_submenu(Some(&menu));
 }
 
-fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
-    let menu = gtk::Menu::new();
+// fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
+//     let menu = gtk::Menu::new();
 
-    let mi = gtk::MenuItem::with_label(format!("pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
-    //mi.connect_activate(tray_menu_item_clicked);
-    menu.append(&mi);
+//     let mi = gtk::MenuItem::with_label(format!("pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
+//     //mi.connect_activate(tray_menu_item_clicked);
+//     menu.append(&mi);
 
-    menu.show_all();
+//     menu.show_all();
 
-    parent.set_submenu(Some(&menu));
-}
+//     parent.set_submenu(Some(&menu));
+// }
 
-fn tray_menu_append_about_submenu2 (
+fn tray_menu_append_about_submenu (
     parent: &gtk::MenuItem,
     config_file: &str, 
     gotify_url: &str,
@@ -103,7 +103,7 @@ fn tray_menu_append_about_submenu2 (
     let gotify_conf_url: &str = gotify_url.clone();
     let gotify_conf_token: &str = gotify_token.clone();
 
-    let mut label: String;
+    let mut label: String = String::from("");
 
     let gotify_conf_str: String;
     if !String::from(gotify_conf_url).is_empty() {
@@ -123,7 +123,9 @@ fn tray_menu_append_about_submenu2 (
     
 
 
-    let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
+    //let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
+    let mi = gtk::MenuItem::with_label(label.as_str());
+
 
     //mi.connect_activate(tray_menu_item_clicked);
     menu.append(&mi);
