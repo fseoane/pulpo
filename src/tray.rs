@@ -103,9 +103,12 @@ fn tray_menu_append_about_submenu2 (
     let gotify_conf_url: &str = gotify_url.clone();
     let gotify_conf_token: &str = gotify_token.clone();
 
+    let mut label: String;
+
     let gotify_conf_str: String;
     if !String::from(gotify_conf_url).is_empty() {
         gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token);
+        label = format!("{}{}{}",app_and_author_str,config_file_str,gotify_conf_str);
     };
 
     let ntfy_conf_url: &str = ntfy_url.clone();
@@ -114,8 +117,12 @@ fn tray_menu_append_about_submenu2 (
     let ntfy_conf_str: String;
     if !String::from(ntfy_conf_url).is_empty(){
         ntfy_conf_str = format!("Ntfy url:\t\t{}\nNtfy topics:\t\t{}",&ntfy_conf_url,&ntfy_conf_topics);
+        label = format!("{}{}",label,ntfy_conf_str);
+
     };
     
+
+
     let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
 
     //mi.connect_activate(tray_menu_item_clicked);
