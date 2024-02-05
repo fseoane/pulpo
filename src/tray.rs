@@ -61,7 +61,7 @@ fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, go
 }
 
 
-pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: GotifyConf, ntfy_conf: NtfyConf){
+pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: &GotifyConf, ntfy_conf: &NtfyConf){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
 

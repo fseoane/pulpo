@@ -132,8 +132,23 @@ fn main(){
         }
     };
 
-    let gotify_args: GotifyArgs;
-    let ntfy_args: NtfyArgs;
+    let mut gotify_args= GotifyArgs { 
+        gotify_token: String::from(""), 
+        gotify_url: url::Url::parse("").unwrap(),
+        gotify_sound: String::from(""),
+        gotify_icon: String::from(""),
+        poll: 5,
+        foreground: true,
+    };
+
+    let mut ntfy_args= NtfyArgs { 
+        ntfy_topics: String::from(""), 
+        ntfy_url: url::Url::parse("").unwrap(),
+        ntfy_sound: String::from(""),
+        ntfy_icon: String::from(""),
+        poll: 5,
+        foreground: true,
+    };
 
     let got_url;
     let got_token: &str;
@@ -151,29 +166,27 @@ fn main(){
     let configdata: ConfigData = read_config(config_filename);
     
     let has_gotify_config= configdata.gotify.is_some();
-    let mut gotify_conf: GotifyConf;
+    let mut gotify_conf = GotifyConf { 
+        gotify_client_token: String::from(""), 
+        gotify_url: String::from(""),
+        gotify_sound: String::from(""),
+        gotify_icon: String::from(""),
+    };
+
     if has_gotify_config{
         gotify_conf = configdata.gotify.unwrap();
-    } else {
-        gotify_conf = GotifyConf { 
-            gotify_client_token: String::from(""), 
-            gotify_url: String::from(""),
-            gotify_sound: String::from(""),
-            gotify_icon: String::from(""),
-        }
     };
     
     let has_ntfy_config= configdata.ntfy.is_some();
-    let mut ntfy_conf: NtfyConf;
+    let mut ntfy_conf= NtfyConf { 
+        ntfy_topics: String::from(""), 
+        ntfy_url: String::from(""),
+        ntfy_sound: String::from(""),
+        ntfy_icon: String::from(""),
+    };
+
     if has_ntfy_config {
         ntfy_conf= configdata.ntfy.unwrap();
-    } else {
-        ntfy_conf = NtfyConf { 
-            ntfy_topics: String::from(""), 
-            ntfy_url: String::from(""),
-            ntfy_sound: String::from(""),
-            ntfy_icon: String::from(""),
-        }
     };
 
     let mut tray_icon: &str = "";
@@ -241,49 +254,30 @@ fn main(){
 
     let tray_thread = || {
         //build_tray_menu(icon_filename);
-        build_tray_menu(config_filename,tray_icon,gotify_conf,ntfy_conf);
+        build_tray_menu(config_filename,tray_icon,&gotify_conf,&ntfy_conf);
     };
 
-    if has_gotify_config && !has_ntfy_config{
-        let gotify_thread = || {
-            let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
-            info!("{}","Exiting");
-            info!("Gotify result: {:#?}",gtfy_res);
-        };
-        std::thread::scope(|s| {
-            s.spawn(tray_thread);
+    let gotify_thread = || {
+        let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
+        info!("{}","Exiting");
+        info!("Gotify result: {:#?}",gtfy_res);
+    };
+
+
+    let ntfy_thread = || {
+        let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
+        info!("{}","Exiting");
+        info!("Ntfy result: {:#?}",ntfy_res);
+    };
+    
+    std::thread::scope(|s| {
+        s.spawn(tray_thread);
+        if has_gotify_config {
             s.spawn(gotify_thread);
-            
-        });
-    };
-
-    if !has_gotify_config && has_ntfy_config{
-        let ntfy_thread = || {
-            let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
-            info!("{}","Exiting");
-            info!("Ntfy result: {:#?}",ntfy_res);
-        };
-        std::thread::scope(|s| {
-            s.spawn(tray_thread);
+        }
+        if has_ntfy_config{
             s.spawn(ntfy_thread);
-        });
-    };
-
-    if has_gotify_config && has_ntfy_config{
-        let gotify_thread = || {
-            let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
-            info!("{}","Exiting");
-            info!("Gotify result: {:#?}",gtfy_res);
-        };
-        let ntfy_thread = || {
-            let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
-            info!("{}","Exiting");
-            info!("Ntfy result: {:#?}",ntfy_res);
-        };
-        std::thread::scope(|s| {
-            s.spawn(tray_thread);
-            s.spawn(gotify_thread);
-            s.spawn(ntfy_thread);
-        });
-    }
+        }
+    });
+    
 }
