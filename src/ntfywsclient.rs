@@ -102,7 +102,6 @@ impl NtfyWSClient {
         }
 
         loop {
-            println!("...in loop");
             // attempt to read from the socket
             // let message: Option<NtfyMessage> = match socket.read_message()? {
             let message: Option<NtfyMessage> = match socket.read()? {

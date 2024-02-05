@@ -1,4 +1,5 @@
 use crate::config::{read_config,NtfyConf, ConfigData, GotifyConf};
+use std::borrow::Borrow;
 // Import the required dependencies.
 use std::env;
 
@@ -18,13 +19,13 @@ fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
-// fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
-//     let _ = open::that(url);
-// }
-
-fn tray_menu_item_open_webbrowser(url: &str) {
+fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
     let _ = open::that(url);
 }
+
+// fn tray_menu_item_open_webbrowser(url: &str) {
+//     let _ = open::that(url);
+// }
 
 #[allow(dead_code)]
 fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
@@ -64,7 +65,42 @@ fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, go
     parent.set_submenu(Some(&menu));
 }
 
+// fn tray_menu_append_about_submenu2 (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
+//     let menu = gtk::Menu::new();
 
+//     let app_and_author_str: &str = "pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\n";
+//     //let mut config_file_str: &str;
+//     let config_file: &str = config_file.clone();
+//     let config_file_str = format!("Config file:\t\t{}\n-----------\n",config_file);
+
+//     let gotify_conf_url: &str = gotify_url.clone();
+//     let gotify_conf_token: &str = gotify_token.clone();
+//     let gotify_conf_str: &str;
+
+//     if !String::from(gotify_url).is_empty() {
+//         gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token).as_str();
+//     };
+
+//     let ntfy_conf_url: &str = ntfy_url.clone();
+//     let ntfy_conf_topics: &str = ntfy_topics.clone();
+//     let ntfy_conf_str: &str;
+ 
+//     if !String::from(ntfy_url).is_empty(){
+//         ntfy_conf_str = format!("Ntfy url:\t\t{}\nNtfy topics:\t\t{}",ntfy_conf_url,ntfy_conf_topics).as_str();
+//     };
+    
+//     let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
+
+//     //mi.connect_activate(tray_menu_item_clicked);
+//     menu.append(&mi);
+
+//     menu.show_all();
+
+//     parent.set_submenu(Some(&menu));
+// }
+
+
+//pub fn build_tray_menu<'l>(config_file: &str, tray_icon: &str, gotify_url: &'static str, gotify_token: &'static str,ntfy_url: &'static str, ntfy_topics: &'static str){
 pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, gotify_token: &str,ntfy_url: &str, ntfy_topics: &str){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
@@ -83,7 +119,11 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     
 
     let got_url = gotify_url;
+    env::set_var("GOTIFY_URL", got_url);
+
     let nfy_url = ntfy_url;
+    env::set_var("NTFY_URL", nfy_url);
+
     let got_token = gotify_token;
     let nfy_topics = ntfy_topics;
 
@@ -116,18 +156,19 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     let menu_item = gtk::SeparatorMenuItem::default();
     menu.append(&menu_item);
     
+   
+    let menu_item = gtk::MenuItem::with_label("Open Gotify");
+    menu_item.connect_activate( |item |{
+        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),std::env::var("GOTIFY_URL").unwrap().as_str())
+    });
     if has_gotify_config{
-        let menu_item = gtk::MenuItem::with_label("Open Gotify");
-        menu_item.connect_activate( |_item|{
-            tray_menu_item_open_webbrowser(&got_url)
-        });
         menu.append(&menu_item);
     };
 
     if has_ntfy_config{
         let menu_item = gtk::MenuItem::with_label("Open Ntfy");
-        menu_item.connect_activate( |_item |{
-            tray_menu_item_open_webbrowser(&nfy_url)
+        menu_item.connect_activate( |item |{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),std::env::var("NTFY_URL").unwrap().as_str())
         });
         menu.append(&menu_item);
     };
@@ -136,9 +177,6 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     menu.append(&menu_item);
     
     let menu_item = gtk::MenuItem::with_label("About");
-    // menu_item.connect_activate(|menu_item|{
-    //     tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
-    // });
     //tray_menu_append_about_submenu(&menu_item,config_file,got_url.as_str(),got_token.as_str(),nfy_url.as_str(),nfy_topics.as_str());
     tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
