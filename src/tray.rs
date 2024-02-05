@@ -97,22 +97,24 @@ fn tray_menu_append_about_submenu (
 
     let menu = gtk::Menu::new();
 
+    let mut label: String = String::from("");
+
     let app_and_author_str: &str = "pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\n";
     let config_file_str: String = format!("Config file:\t\t{}\n-----------\n",config_file);
+    label = format!("{}{}",app_and_author_str,config_file_str);
   
-    let gotify_conf_url: &str = gotify_url.clone();
-    let gotify_conf_token: &str = gotify_token.clone();
+    let gotify_conf_url: &str = gotify_url;
+    let gotify_conf_token: &str = gotify_token;
 
-    let mut label: String = String::from("");
 
     let gotify_conf_str: String;
     if !String::from(gotify_conf_url).is_empty() {
         gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token);
-        label = format!("{}{}{}",app_and_author_str,config_file_str,gotify_conf_str);
+        label = format!("{}{}",label,gotify_conf_str);
     };
 
-    let ntfy_conf_url: &str = ntfy_url.clone();
-    let ntfy_conf_topics: &str = ntfy_topics.clone();
+    let ntfy_conf_url: &str = ntfy_url;
+    let ntfy_conf_topics: &str = ntfy_topics;
 
     let ntfy_conf_str: String;
     if !String::from(ntfy_conf_url).is_empty(){
