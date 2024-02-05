@@ -61,7 +61,7 @@ fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, go
 }
 
 
-pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: &GotifyConf, ntfy_conf: &NtfyConf){
+pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, gotify_token: &str,ntfy_url: &str, ntfy_topics: &str){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
 
@@ -71,31 +71,28 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: &GotifyC
 
     let mut has_gotify_config: bool = false;
     let mut has_ntfy_config: bool = false;
-    let mut got_token: &str = "";
-    let mut got_url: &str = "";
-    let mut nfy_topics: &str = "";
-    let mut nfy_url:&str = "";
+    let mut got_token = String::from("");
+    let mut got_url= String::from("");
+    let mut nfy_topics= String::from("");
+    let mut nfy_url= String::from("");
 
-    let gotify_url = gotify_conf.gotify_url.as_str();
-    let ntfy_url = ntfy_conf.ntfy_url.as_str();
-    let gotify_token = gotify_conf.gotify_client_token.as_str();
-    let ntfy_topics = ntfy_conf.ntfy_topics.as_str();
+    // let gotify_url = gotify_conf.gotify_url.as_str();
+    // let ntfy_url = ntfy_conf.ntfy_url.as_str();
+    // let gotify_token = gotify_conf.gotify_client_token.as_str();
+    // let ntfy_topics = ntfy_conf.ntfy_topics.as_str();
 
-    has_gotify_config= gotify_conf.gotify_url.is_empty();
-    has_ntfy_config= ntfy_conf.ntfy_url.is_empty();
+    has_gotify_config= gotify_url.is_empty();
+    has_ntfy_config= ntfy_url.is_empty();
 
     if has_gotify_config {
-        got_token = gotify_token;
-        got_url = gotify_url;
-        nfy_topics = "";
-        nfy_url = "";
+        got_token = String::from(gotify_token);
+        got_url = String::from(gotify_url);
     };
 
     if has_ntfy_config {
-        got_token = "";
-        got_url = "";
-        nfy_url =ntfy_url;
-        nfy_topics = ntfy_topics;
+
+        nfy_url =String::from(ntfy_url);
+        nfy_topics = String::from(ntfy_topics);
     };
 
     // Initialize GTK
@@ -125,15 +122,15 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: &GotifyC
     if has_gotify_config{
         let menu_item = gtk::MenuItem::with_label("Open Gotify");
         menu_item.connect_activate( |item|{
-            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), got_url)
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), got_url.as_str())
         });
         menu.append(&menu_item);
     };
 
     if has_ntfy_config{
         let menu_item = gtk::MenuItem::with_label("Open Ntfy");
-        menu_item.connect_activate( |item|{
-            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url)
+        menu_item.connect_activate( |item |{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), n_url.as_str())
         });
         menu.append(&menu_item);
     };
@@ -145,7 +142,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: &GotifyC
     // menu_item.connect_activate(|menu_item|{
     //     tray_menu_item_clicked( menu_item.upcast_ref::<gtk::MenuItem>())
     // });
-    tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
+    tray_menu_append_about_submenu(&menu_item,config_file,got_url.as_str(),got_token.as_str(),nfy_url.as_str(),nfy_topics.as_str());
     menu.append(&menu_item);
 
     let menu_item = gtk::MenuItem::with_label("Quit");

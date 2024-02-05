@@ -7,6 +7,8 @@ pub mod gotifywsclient;
 pub mod ntfywsclient;
 
 
+use std::borrow::Borrow;
+
 use crate::{
     args::{Args,GotifyArgs,NtfyArgs},
     errors::PulpoError,
@@ -254,7 +256,14 @@ fn main(){
 
     let tray_thread = || {
         //build_tray_menu(icon_filename);
-        build_tray_menu(config_filename,tray_icon,&gotify_conf,&ntfy_conf);
+        build_tray_menu(
+            config_filename,
+            tray_icon,
+            gotify_conf.gotify_url.as_str(),
+            gotify_conf.gotify_client_token.as_str(),
+            ntfy_conf.ntfy_url.as_str(),
+            ntfy_conf.ntfy_topics.as_str(),
+        );
     };
 
     let gotify_thread = || {
