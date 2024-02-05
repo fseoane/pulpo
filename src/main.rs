@@ -132,54 +132,55 @@ fn main(){
         }
     };
 
-    let mut has_gotify_config: bool = false;
-    let mut has_ntfy_config: bool = false;
     let gotify_args: GotifyArgs;
     let ntfy_args: NtfyArgs;
 
-    let mut got_url;
-    let mut got_token: &str;
-    let mut got_sound: &str;
-    let mut got_icon: &str;
+    let got_url;
+    let got_token: &str;
+    let got_sound: &str;
+    let got_icon: &str;
 
-    let mut nfy_url;
-    let mut nfy_topics: &str;
-    let mut nfy_sound: &str;
-    let mut nfy_icon: &str;
+    let nfy_url;
+    let nfy_topics: &str;
+    let nfy_sound: &str;
+    let nfy_icon: &str;
 
     println!("Reading config from:            {}", config_filename); 
     println!("------------------------------------------------------------------------");
+
     let configdata: ConfigData = read_config(config_filename);
     
     let has_gotify_config= configdata.gotify.is_some();
-    let gotify_conf: GotifyConf;
+    let mut gotify_conf: GotifyConf;
     if has_gotify_config{
         gotify_conf = configdata.gotify.unwrap();
     } else {
         gotify_conf = GotifyConf { 
             gotify_client_token: String::from(""), 
-            gotify_url: String::from(Url::parse("").unwrap()),
+            gotify_url: String::from(""),
             gotify_sound: String::from(""),
             gotify_icon: String::from(""),
         }
     };
     
     let has_ntfy_config= configdata.ntfy.is_some();
-    let ntfy_conf: NtfyConf;
+    let mut ntfy_conf: NtfyConf;
     if has_ntfy_config {
         ntfy_conf= configdata.ntfy.unwrap();
     } else {
         ntfy_conf = NtfyConf { 
             ntfy_topics: String::from(""), 
-            ntfy_url: String::from(Url::parse("").unwrap()),
+            ntfy_url: String::from(""),
             ntfy_sound: String::from(""),
             ntfy_icon: String::from(""),
         }
     };
 
+    let mut tray_icon: &str = "";
     if configdata.config.tray_icon.len()>0 {
         // Print out the values to `stdout`.
-        println!("    config/tray_icon:           {}", configdata.config.tray_icon); 
+        tray_icon = configdata.config.tray_icon.as_str();
+        println!("    config/tray_icon:           {}", tray_icon); 
     }
 
 
@@ -201,10 +202,6 @@ fn main(){
         println!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
         println!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
         println!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
-        // println!("    gotify/gotify_url:          {}", got_url.as_ref().unwrap().as_str());
-        // println!("    gotify/gotify_client_token: {}", got_token);
-        // println!("    gotify/gotify_sound:        {}", got_sound);
-        // println!("    gotify/gotify_icon:         {}", got_icon);
 
     };
 
@@ -228,10 +225,6 @@ fn main(){
         println!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
         println!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
         println!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
-        // println!("    ntfy/ntfy_url:              {}", nfy_url.unwrap().as_str());
-        // println!("    ntfy/ntfy_topics:           {}", nfy_topics);
-        // println!("    ntfy/ntfy_sound:            {}", nfy_sound);
-        // println!("    ntfy/ntfy_icon:             {}", nfy_icon);
 
     };
     println!("------------------------------------------------------------------------");
@@ -248,7 +241,7 @@ fn main(){
 
     let tray_thread = || {
         //build_tray_menu(icon_filename);
-        build_tray_menu(config_filename,configdata);
+        build_tray_menu(config_filename,tray_icon,gotify_conf,ntfy_conf);
     };
 
     if has_gotify_config && !has_ntfy_config{

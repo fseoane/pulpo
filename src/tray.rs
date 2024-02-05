@@ -1,4 +1,4 @@
-use crate::config;
+use crate::config::{read_config,NtfyConf, ConfigData, GotifyConf};
 // Import the required dependencies.
 use std::env;
 
@@ -61,14 +61,13 @@ fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, go
 }
 
 
-pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
+pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_conf: GotifyConf, ntfy_conf: NtfyConf){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
 
     // Set your application name and icon
     let app_name: &str = "pulpo";
     let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");//"/home/efe/Dev/RustLearning/read_config_from_toml_file/resources"; //"notification.png";
-    let tray_icon= configdata.config.tray_icon.as_str();
 
     let mut has_gotify_config: bool = false;
     let mut has_ntfy_config: bool = false;
@@ -77,22 +76,26 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
     let mut nfy_topics: &str = "";
     let mut nfy_url:&str = "";
 
-    //let config = configdata.clone();
+    let gotify_url = gotify_conf.gotify_url.as_str();
+    let ntfy_url = ntfy_conf.ntfy_url.as_str();
+    let gotify_token = gotify_conf.gotify_client_token.as_str();
+    let ntfy_topics = ntfy_conf.ntfy_topics.as_str();
 
-    if configdata.gotify.unwrap().gotify_url.clone().len()>0 {
-        has_gotify_config = true;
-        //gotify_url = configdata.gotify.unwrap().gotify_url.clone().as_str();
-        got_token = configdata.gotify.unwrap().gotify_client_token.clone().as_str();
-        got_url = configdata.gotify.unwrap().gotify_url.clone().as_str();
+    has_gotify_config= gotify_conf.gotify_url.is_empty();
+    has_ntfy_config= ntfy_conf.ntfy_url.is_empty();
+
+    if has_gotify_config {
+        got_token = gotify_token;
+        got_url = gotify_url;
         nfy_topics = "";
         nfy_url = "";
     };
-    if configdata.ntfy.unwrap().ntfy_url.clone().len()>0 {
-        has_ntfy_config = true;
+
+    if has_ntfy_config {
         got_token = "";
         got_url = "";
-        nfy_url = configdata.ntfy.unwrap().ntfy_url.clone().as_str();
-        nfy_topics = configdata.ntfy.unwrap().ntfy_topics.clone().as_str();
+        nfy_url =ntfy_url;
+        nfy_topics = ntfy_topics;
     };
 
     // Initialize GTK
@@ -127,7 +130,7 @@ pub fn build_tray_menu(config_file: &str, configdata: config::ConfigData){
         menu.append(&menu_item);
     };
 
-    if has_gotify_config{
+    if has_ntfy_config{
         let menu_item = gtk::MenuItem::with_label("Open Ntfy");
         menu_item.connect_activate( |item|{
             tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(), nfy_url)
