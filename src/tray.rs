@@ -120,7 +120,6 @@ fn tray_menu_append_about_submenu (
     if !String::from(ntfy_conf_url).is_empty(){
         ntfy_conf_str = format!("Ntfy url:\t\t{}\nNtfy topics:\t\t{}",&ntfy_conf_url,&ntfy_conf_topics);
         label = format!("{}{}",label,ntfy_conf_str);
-
     };
     
     //let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
