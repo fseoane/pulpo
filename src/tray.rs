@@ -1,8 +1,6 @@
-use crate::config::{read_config,NtfyConf, ConfigData, GotifyConf};
-use std::borrow::Borrow;
 // Import the required dependencies.
+use crate::config::{read_config,NtfyConf, ConfigData, GotifyConf};
 use std::env;
-
 use std::path::Path;
 use appindicator3::{prelude::*, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
@@ -15,39 +13,40 @@ fn toggle_sensitivity (widget: &gtk::Widget) {
     widget.set_sensitive(!widget.is_sensitive());
 }
 
+
 fn tray_menu_item_clicked(item: &MenuItem) {
     println!("{} clicked!", item.label().unwrap());
 }
 
+
 fn tray_silent_clicked(_item: &MenuItem) {
     let current = std::env::var("SILENT").unwrap();
-    println!("SILENT current:{}",current);
+    //println!("SILENT current:{}",current);
     if current=="on"{
         env::set_var("SILENT", String::from("off"));
     } else if current=="off"{
         env::set_var("SILENT", String::from("on"));
     };
-    println!("SILENT after:{}",std::env::var("SILENT").unwrap());
+    //println!("SILENT after:{}",std::env::var("SILENT").unwrap());
 }
+
 
 fn tray_dnd_clicked(_item: &MenuItem) {
     let current = std::env::var("DND").unwrap();
-    println!("DND current:{}",current);
+    //println!("DND current:{}",current);
     if current=="on"{
         env::set_var("DND", String::from("off"));
     } else if current=="off"{
         env::set_var("DND", String::from("on"));
     };
-    println!("DND after:{}",std::env::var("DND").unwrap());
+    //println!("DND after:{}",std::env::var("DND").unwrap());
 }
+
 
 fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
     let _ = open::that(url);
 }
 
-// fn tray_menu_item_open_webbrowser(url: &str) {
-//     let _ = open::that(url);
-// }
 
 #[allow(dead_code)]
 fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
@@ -75,17 +74,6 @@ fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
     parent.set_submenu(Some(&menu));
 }
 
-// fn tray_menu_append_about_submenu (parent: &gtk::MenuItem ,config_file: &str, gotify_url: &str,gotify_token: &str,ntfy_url: &str,ntfy_topics: &str) {
-//     let menu = gtk::Menu::new();
-
-//     let mi = gtk::MenuItem::with_label(format!("pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\nConfig file:\t\t{}\n-----------\nGotify url:\t\t{}\nGotify token:\t{}\nNtfy url:\t\t{}\nNtfy topics:\t\t{}",config_file,gotify_url,gotify_token,ntfy_url,ntfy_topics).as_str());
-//     //mi.connect_activate(tray_menu_item_clicked);
-//     menu.append(&mi);
-
-//     menu.show_all();
-
-//     parent.set_submenu(Some(&menu));
-// }
 
 fn tray_menu_append_about_submenu (
     parent: &gtk::MenuItem,
@@ -122,7 +110,7 @@ fn tray_menu_append_about_submenu (
         label = format!("{}{}",label,ntfy_conf_str);
     };
     
-    //let mi = gtk::MenuItem::with_label(format!("{}{}{}{}",app_and_author_str,config_file_str,gotify_conf_str,ntfy_conf_str).as_str());
+  
     let mi = gtk::MenuItem::with_label(label.as_str());
 
     //mi.connect_activate(tray_menu_item_clicked);
@@ -134,7 +122,6 @@ fn tray_menu_append_about_submenu (
 }
 
 
-//pub fn build_tray_menu<'l>(config_file: &str, tray_icon: &str, gotify_url: &'static str, gotify_token: &'static str,ntfy_url: &'static str, ntfy_topics: &'static str){
 pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, gotify_token: &str,ntfy_url: &str, ntfy_topics: &str){
 
     // Ref: https://github.com/rehar/appindicator3/blob/fcf1e0269065c81a4169e0a39d1cbfd0360c50d5/examples/simple_client.rs
