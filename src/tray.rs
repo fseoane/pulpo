@@ -6,6 +6,7 @@ use appindicator3::{prelude::*, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
 use gtk::{prelude::*, MenuItem};
 use open;
+use log::{error, info, warn};
 
 // -----------------------------------------------------------------------------------------------
 #[allow(dead_code)]
@@ -15,31 +16,29 @@ fn toggle_sensitivity (widget: &gtk::Widget) {
 
 
 fn tray_menu_item_clicked(item: &MenuItem) {
-    println!("{} clicked!", item.label().unwrap());
+    info!("Menu item {} clicked!", item.label().unwrap());
 }
 
 
 fn tray_silent_clicked(_item: &MenuItem) {
     let current = std::env::var("SILENT").unwrap();
-    //println!("SILENT current:{}",current);
     if current=="on"{
         env::set_var("SILENT", String::from("off"));
     } else if current=="off"{
         env::set_var("SILENT", String::from("on"));
     };
-    //println!("SILENT after:{}",std::env::var("SILENT").unwrap());
+    info!("SILENT:{}",std::env::var("SILENT").unwrap());
 }
 
 
 fn tray_dnd_clicked(_item: &MenuItem) {
     let current = std::env::var("DND").unwrap();
-    //println!("DND current:{}",current);
     if current=="on"{
         env::set_var("DND", String::from("off"));
     } else if current=="off"{
         env::set_var("DND", String::from("on"));
     };
-    //println!("DND after:{}",std::env::var("DND").unwrap());
+    info!("DND after:{}",std::env::var("DND").unwrap());
 }
 
 

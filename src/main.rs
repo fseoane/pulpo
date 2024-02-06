@@ -21,12 +21,14 @@ use crate::{
 };
 
 use std::env;
-use log::info;
 use url::Url;
 use daemonize::Daemonize;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
+
+use log::{error, info, warn};
+use simplelog::{Config, LevelFilter, SimpleLogger};
 
 type Result<T> = std::result::Result<T, PulpoError>;
 
@@ -42,7 +44,6 @@ fn active_internet_connection() -> bool {
         std::io::Result::Ok(_s) => true,
         std::io::Result::Err(_e) => false,
     }
-
 }
 
 fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
@@ -60,7 +61,7 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
 
     //daemonize the  process
     if !args.foreground{
-        info!("Starting daemon.");
+        info!("Starting ntfy daemon.");
         let daemonize = Daemonize::new();
         let _ = daemonize.execute();
         //daemonize.start()?;
@@ -92,14 +93,14 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
 
     //daemonize the  process
     if !args.foreground{
-        info!("Starting daemon.");
+        info!("Starting ntfy daemon.");
         let daemonize = Daemonize::new();
         let _ = daemonize.execute();
         //daemonize.start()?;
     }
 
     //Creating the client and looping
-    info!("Creating ntify client");
+    info!("Creating ntfy client");
     let ntfy_cli = NtfyWSClient::new(ws_url, topics);
     match ntfy_cli.run_loop(poll,sound.as_str(),icon.as_str()) {
         Ok(_) => return Ok(()),
@@ -126,6 +127,12 @@ fn main(){
 
     env::set_var("SILENT", String::from("off"));
     env::set_var("DND", String::from("off"));
+
+    if let Err(e) = SimpleLogger::init(LevelFilter::Info, Config::default()) {
+        eprintln!("Failed to initiate the logger: {}", e);
+        std::process::exit(1);
+    };
+
 
     if cmdline.iter().any(|i| i==help_option1) || cmdline.iter().any(|i| i==help_option2) {
         println!(" ");
@@ -183,8 +190,8 @@ fn main(){
     let nfy_sound: &str;
     let nfy_icon: &str;
 
-    println!("Reading config from:            {}", config_filename); 
-    println!("------------------------------------------------------------------------");
+    info!("Reading config from:            {}", config_filename); 
+    info!("------------------------------------------------------------------------");
 
     let configdata: ConfigData = read_config(config_filename);
     
@@ -216,7 +223,7 @@ fn main(){
     if configdata.config.tray_icon.len()>0 {
         // Print out the values to `stdout`.
         tray_icon = configdata.config.tray_icon.as_str();
-        println!("    config/tray_icon:           {}", tray_icon); 
+        info!("    config/tray_icon:           {}", tray_icon); 
     }
 
 
@@ -234,10 +241,10 @@ fn main(){
             poll: 5,
             foreground: fg,
         };
-        println!("    gotify/gotify_url:          {}", gotify_args.gotify_url.as_str());
-        println!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
-        println!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
-        println!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
+        info!("    gotify/gotify_url:          {}", gotify_args.gotify_url.as_str());
+        info!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
+        info!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
+        info!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
 
     };
 
@@ -257,24 +264,25 @@ fn main(){
             poll: 5,
             foreground: fg,
         };
-        println!("    ntfy/ntfy_url:              {}", ntfy_args.ntfy_url.as_str());
-        println!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
-        println!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
-        println!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
+        info!("    ntfy/ntfy_url:              {}", ntfy_args.ntfy_url.as_str());
+        info!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
+        info!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
+        info!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
 
     };
-    println!("------------------------------------------------------------------------");
-    println!(" ");
+    info!("------------------------------------------------------------------------");
+    info!(" ");
 
     // Wait for internet connection to be available
     let mut counter = 0;
-    println!("Waiting for network connection.");
+
+    info!("Waiting for network connection.");
     while counter < 12 && !active_internet_connection() { 
-        println!("{}",active_internet_connection());
         thread::sleep(Duration::from_secs(5));
         counter += 1;
     };
-    println!("Network is avaible.");
+    info!("Network is avaible.");
+ 
 
     // let got_url = Url::parse(configdata.gotify.unwrap().gotify_url.as_str());
     // let got_token = configdata.gotify.unwrap().gotify_client_token.as_str();

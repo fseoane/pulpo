@@ -84,7 +84,7 @@ impl NtfyWSClient {
 
     pub fn run_loop(&self, poll: u64, notif_sound: &str, notif_icon: &str) -> Result<()> {
         
-        info!("{}","Starting loop");
+        info!("{}","Starting ntfy loop");
 
         // TO DO: factor out the connection
         let mut ws_url = self.ws_url.clone();
@@ -93,22 +93,18 @@ impl NtfyWSClient {
 
 
         info!("Ntfy websocket url: {}", ws_url);
-        // println!("Ntfy websocket url: {}", ws_url);
 
         let (mut socket, 
             _response) = tungstenite::connect(&ws_url)?;
 
         if socket.can_read(){
             info!("Connected to Ntfy at {}", self.ws_url);
-            // println!("Connected to Ntfy at {}", ws_url);
         }
 
         loop {
             // attempt to read from the socket
-            // let message: Option<NtfyMessage> = match socket.read_message()? {
             let message: Option<NtfyMessage> = match socket.read()? {
                 Message::Text(s) => {
-                    info!("Ntfy message received");
                     Some(serde_json::from_str(&s)?)
                 }
                 _ => None,
@@ -122,13 +118,9 @@ impl NtfyWSClient {
                     let messge = m.message.clone().unwrap();
 
                     info!("[!] Ntfy message received | title:{} message:{}",
-                        format!("{}:{}",&m.topic,&tit).as_str(),
+                        format!("{}/{}",&m.topic,&tit).as_str(),
                         &messge
-                    );
-                    // println!("[!] Ntfy message received | topic/title:{} message:{}",
-                    //     format!("{}/{}",&m.topic,&tit).as_str(),
-                    //     &messge
-                    // ); 
+                    ); 
                     if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap()=="off"{
                         NtfyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
                     };
@@ -152,12 +144,8 @@ impl NtfyWSClient {
                         }
                     };
                 }
-
             }
-
             thread::sleep(Duration::from_secs(poll));
-
         }
-
     }
 }

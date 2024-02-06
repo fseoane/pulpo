@@ -81,7 +81,7 @@ impl GotifyWSClient {
 
     pub fn run_loop(&self, poll: u64, notif_sound: &str, notif_icon: &str) -> Result<()> {
         
-        info!("{}","Starting loop");
+        info!("{}","Starting gotify loop");
 
         // TO DO: factor out the connection
         let mut ws_url = self.ws_url.clone();
@@ -90,13 +90,11 @@ impl GotifyWSClient {
         ws_url.set_query(Some(&query));
 
         info!("Gotify websocket url: {}", ws_url);
-        println!("Gotify websocket url: {}", ws_url);
 
         let (mut socket, _response) = tungstenite::connect(&ws_url)?;
 
         if socket.can_read(){
             info!("Connected to Gotify at {}", self.ws_url);
-            println!("Connected to Gotify at {}", ws_url);
         }
         
         loop {
@@ -113,7 +111,6 @@ impl GotifyWSClient {
             // if a message was received create a notification
             if let Some(m) = message {
                 info!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
-                // println!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
 
                 if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
                     GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
@@ -137,11 +134,7 @@ impl GotifyWSClient {
                     }
                 };  
 
-
-
-                
             }
-
             thread::sleep(Duration::from_secs(poll));
         }
 

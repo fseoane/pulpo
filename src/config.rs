@@ -2,7 +2,7 @@
 use serde_derive::{Serialize, Deserialize};
 use std::fs;
 use toml;
-//use std::path::Path;
+use log::{error, info, warn};
 
 
 
@@ -42,7 +42,7 @@ pub fn read_config(filename: &str) -> ConfigData{
     // Read the contents of the file using a `match` block 
     // to return the `data: Ok(c)` as a `String` 
     // or handle any `errors: Err(_)`.
-    eprintln!("Configuration ({}) : ", filename);
+    info!("Configuration ({}) : ", filename);
     let contents:String = match fs::read_to_string(filename) {
         // If successful return the files text as `contents`.
         // `c` is a local variable.
