@@ -22,18 +22,18 @@ pub enum PulpoError {
 impl fmt::Display for PulpoError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *&self {
-            PulpoError::Json(e) => write!(f, "A JSON error occured: {}", e),
-            PulpoError::IO(e) => write!(f, "An IO error occured {}", e),
-            PulpoError::Var(e) => write!(f, "A environment variable error occured: {}", e),
-            PulpoError::BaseUrl(u) => write!(f, "{} cannot be a base URL", u),
-            PulpoError::UrlParse(u) => write!(f, "Unable to parse the URL: {}", u),
-            PulpoError::MissingProtocol => write!(f, "The URL does not start with HTTP or HTTPS. The connection protocol could not be determined."),
-            PulpoError::SchemeError(u) => write!(f, "Could not convert {} into a websocket URL.", u),
-            PulpoError::FileNotFound(p) => write!(f, "Could not find {}", p),
-            PulpoError::Daemonize(d) => write!(f, "Failed to daemonize: {}", d),
-            PulpoError::MissingArgs(e) => write!(f, "{}", e),
-            PulpoError::UreqResponse(e) => write!(f, "{}", e),
-            PulpoError::Tungstenite(e) => write!(f, "A websocket error occurred: {}", e),
+            PulpoError::Json(e) => write!(f, "[!] A JSON error occured: {}", e),
+            PulpoError::IO(e) => write!(f, "[!] An IO error occured {}", e),
+            PulpoError::Var(e) => write!(f, "[!] A environment variable error occured: {}", e),
+            PulpoError::BaseUrl(u) => write!(f, "[!] {} cannot be a base URL", u),
+            PulpoError::UrlParse(u) => write!(f, "[!] Unable to parse the URL: {}", u),
+            PulpoError::MissingProtocol => write!(f, "[!] The URL does not start with HTTP or HTTPS. The connection protocol could not be determined."),
+            PulpoError::SchemeError(u) => write!(f, "[!] Could not convert {} into a websocket URL.", u),
+            PulpoError::FileNotFound(p) => write!(f, "[!] Could not find {}", p),
+            PulpoError::Daemonize(d) => write!(f, "[!] Failed to daemonize: {}", d),
+            PulpoError::MissingArgs(e) => write!(f, "[!] {}", e),
+            PulpoError::UreqResponse(e) => write!(f, "[!] {}", e),
+            PulpoError::Tungstenite(e) => write!(f, "[!] A websocket error occurred: {}", e),
         }
     }
 }

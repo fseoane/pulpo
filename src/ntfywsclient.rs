@@ -117,7 +117,7 @@ impl NtfyWSClient {
                     let tit = m.title.clone().unwrap();
                     let messge = m.message.clone().unwrap();
 
-                    info!("[!] Ntfy message received | title:{} message:{}",
+                    info!("[✉]Ntfy message received | title:{} message:{}",
                         format!("{}/{}",&m.topic,&tit).as_str(),
                         &messge
                     ); 
@@ -136,11 +136,11 @@ impl NtfyWSClient {
                         // threshhold
                         match notif {
                             Ok(_) => info!(
-                                "Sent desktop notification: title: {} message: {}",
+                                "[✉] Sent Ntfy desktop notification: title: {} message: {}",
                                 format!("{}:{}",&m.topic,&tit).as_str(), 
                                 &messge
                             ),
-                            Err(e) => warn!("Failed to send desktop notification: {}", e),
+                            Err(e) => warn!("[!]Failed to send Ntfy desktop notification: {}", e),
                         }
                     };
                 }

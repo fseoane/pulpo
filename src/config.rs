@@ -42,7 +42,7 @@ pub fn read_config(filename: &str) -> ConfigData{
     // Read the contents of the file using a `match` block 
     // to return the `data: Ok(c)` as a `String` 
     // or handle any `errors: Err(_)`.
-    info!("Configuration ({}) : ", filename);
+    info!("Configuration file is ({}) : ", filename);
     let contents:String = match fs::read_to_string(filename) {
         // If successful return the files text as `contents`.
         // `c` is a local variable.
@@ -51,6 +51,7 @@ pub fn read_config(filename: &str) -> ConfigData{
         Err(_) => {
             // Write `msg` to `stderr`.
             eprintln!("[!] Could not read config file `{}`", filename);
+            warn!("[!] Could not read config file `{}`", filename);
             // Exit the program with exit code `1`.
             std::process::exit(1);
         }
@@ -67,6 +68,7 @@ pub fn read_config(filename: &str) -> ConfigData{
         Err(_) => {
             // Write `msg` to `stderr`.
             eprintln!("[!] Unable to load config data from `{}`", filename);
+            warn!("[!] Unable to load config data from `{}`", filename);
             // Exit the program with exit code `1`.
             std::process::exit(1);
         }

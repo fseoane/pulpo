@@ -102,7 +102,6 @@ impl GotifyWSClient {
             // let message: Option<GotifyMessage> = match socket.read_message()? {
             let message: Option<GotifyMessage> = match socket.read()? {
                 Message::Text(s) => {
-                    info!("Message received");
                     Some(serde_json::from_str(&s)?)
                 }
                 _ => None,
@@ -110,7 +109,7 @@ impl GotifyWSClient {
 
             // if a message was received create a notification
             if let Some(m) = message {
-                info!("[!] Gotify message received | title:{} message:{}",m.title,m.message);
+                info!("[✉] Gotify message received | title:{} message:{}",m.title,m.message);
 
                 if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
                     GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
@@ -127,10 +126,10 @@ impl GotifyWSClient {
                     // threshhold
                     match notif {
                         Ok(_) => info!(
-                            "Sent desktop notification: title: {} message: {}",
+                            "[✉] Sent gotify desktop notification: title: {} message: {}",
                             m.title, m.message
                         ),
-                        Err(e) => warn!("Failed to send desktop notification: {}", e),
+                        Err(e) => warn!("[!] Failed to send gotify desktop notification: {}", e),
                     }
                 };  
 
