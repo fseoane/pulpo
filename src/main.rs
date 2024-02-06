@@ -1,3 +1,6 @@
+// Ref: https://gitlab.com/cosmo_duff/gotify-desktop-notification-daemon/-/tree/main/src?ref_type=heads
+
+
 pub mod args;
 pub mod errors;
 pub mod helpers;
@@ -6,8 +9,6 @@ pub mod config;
 pub mod gotifywsclient;
 pub mod ntfywsclient;
 
-
-use std::borrow::Borrow;
 
 use crate::{
     args::{Args,GotifyArgs,NtfyArgs},
@@ -23,7 +24,6 @@ use std::env;
 use log::info;
 use url::Url;
 use daemonize::Daemonize;
-use std::io::prelude::*;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
