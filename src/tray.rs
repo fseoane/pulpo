@@ -143,28 +143,17 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     let app_name: &str = "pulpo";
     let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");
 
-    let mut has_gotify_config: bool = false;
-    let mut has_ntfy_config: bool = false;
+    let got_url = String::from(gotify_url);
+    let got_url_copy = got_url.clone();     // this clone is needed to 'move´ it to the next closures of tray_menu_item_open_webbrowser
+    let got_token = String::from(gotify_token);
 
-    // let got_token = String::from(gotify_token);
-    // let got_url = String::from(gotify_url);
-    // let nfy_url =String::from(ntfy_url);
-    // let nfy_topics = String::from(ntfy_topics);
     
+    let nfy_url =String::from(ntfy_url);
+    let nfy_url_copy =  nfy_url.clone();    // this clone is needed to 'move´ it to the next closures of tray_menu_item_open_webbrowser
+    let nfy_topics = String::from(ntfy_topics); 
 
-    let got_url = gotify_url.clone();
-    env::set_var("GOTIFY_URL", got_url);
-
-    let nfy_url = ntfy_url.clone();
-    env::set_var("NTFY_URL", nfy_url);
-
-    let got_token = gotify_token;
-    let nfy_topics = ntfy_topics;
-
-    // has_gotify_config = !got_token.is_empty();
-    // has_ntfy_config = !nfy_topics.is_empty();
-    has_gotify_config = !String::from(got_token).is_empty();
-    has_ntfy_config = !String::from(nfy_topics).is_empty();
+    let has_gotify_config = !String::from(got_token.clone()).is_empty();
+    let has_ntfy_config = !String::from(nfy_topics.clone()).is_empty();
     
     // Initialize GTK
     gtk::init().expect("Failed to initialize GTK.");
@@ -191,18 +180,18 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     menu.append(&menu_item);
     
    
-    let menu_item = gtk::MenuItem::with_label("Open Gotify");
-    menu_item.connect_activate( |item |{
-        tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),std::env::var("GOTIFY_URL").unwrap().as_str())
-    });
     if has_gotify_config{
+        let menu_item = gtk::MenuItem::with_label("Open Gotify");
+        menu_item.connect_activate( move |item |{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),got_url_copy.as_str())
+        });
         menu.append(&menu_item);
     };
 
     if has_ntfy_config{
         let menu_item = gtk::MenuItem::with_label("Open Ntfy");
-        menu_item.connect_activate( |item |{
-            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),std::env::var("NTFY_URL").unwrap().as_str())
+        menu_item.connect_activate( move |item |{
+            tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),nfy_url_copy.as_str())
         });
         menu.append(&menu_item);
     };
@@ -214,10 +203,10 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     tray_menu_append_about_submenu(
         &menu_item,
         config_file,
-        got_url,
-        got_token,
-        nfy_url,
-        nfy_topics
+        &got_url.as_str(),
+        &got_token.as_str(),
+        &nfy_url.as_str(),
+        &nfy_topics.as_str()
     );
     //tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
@@ -238,7 +227,6 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
         .category(IndicatorCategory::ApplicationStatus)
         .menu(&menu)
         .icon_theme_path(icon_path.to_str().unwrap())
-        //.icon("notification.png", "pulpo")
         .icon(tray_icon, "pulpo")
         .attention_icon("notification.att.png", "pulpo attention")
         .status(IndicatorStatus::Active)
