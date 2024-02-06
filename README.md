@@ -44,13 +44,13 @@ pulpo.conf file looks like this
                 tray_icon=""pulpo-green-64x64.png"
 
                 [gotify]
-                gotify_url="gotify-host:port"
+                gotify_url="http(s)://gotify-host:port"
                 gotify_client_token="gotify-client-token"
                 gotify_sound="notification.ogg"
                 gotify_icon="gotify-icon.png"
 
                 [ntfy]
-                ntfy_url="https://ntfy-host:port"
+                ntfy_url="http(s)://ntfy-host:port"
                 ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
                 ntfy_sound="notification.ogg"
                 ntfy_icon="ntfy-icon.png"     
