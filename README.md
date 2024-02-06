@@ -38,7 +38,24 @@ The bash script (install.sh) inside the realease package will copy all the neces
 - ntfy server url and port
 - ntfy topics to be subscribed
 
-Note: Yo can configure only Gotify, or only Ntfy or both at the same time
+pulpo.conf file looks like this
+
+                [config]
+                tray_icon=""pulpo-green-64x64.png"
+
+                [gotify]
+                gotify_url="gotify-host:port"
+                gotify_client_token="gotify-client-token"
+                gotify_sound="notification.ogg"
+                gotify_icon="gotify-icon.png"
+
+                [ntfy]
+                ntfy_url="https://ntfy-host:port"
+                ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
+                ntfy_sound="notification.ogg"
+                ntfy_icon="ntfy-icon.png"     
+
+Note: You can configure only Gotify, only Ntfy, or both at the same time.
 
 ### 2.2.Installing from AUR (Arch Linux)
 To install the application from AUR (Arch User Repo) you can use an AUR helper like yay and execute:
