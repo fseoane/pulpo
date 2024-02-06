@@ -28,7 +28,8 @@ use std::thread;
 use std::time::Duration;
 
 use log::{error, info, warn};
-use simplelog::{Config, LevelFilter, SimpleLogger};
+use simplelog::{Config, LevelFilter, SimpleLogger,WriteLogger};
+use std::fs::File;
 
 type Result<T> = std::result::Result<T, PulpoError>;
 
@@ -128,11 +129,25 @@ fn main(){
     env::set_var("SILENT", String::from("off"));
     env::set_var("DND", String::from("off"));
 
-    if let Err(e) = SimpleLogger::init(LevelFilter::Info, Config::default()) {
+    // if let Err(e) = SimpleLogger::init(LevelFilter::Info,Config::default()) {
+    //     eprintln!("Failed to initiate the logger: {}", e);
+    //     std::process::exit(1);
+    // } else {
+    //     let _ = WriteLogger::new(
+    //         LevelFilter::Info,
+    //         Config::default(),
+    //         File::create("pulpo.log").unwrap(),
+    //     );
+    // };
+
+    if let Err(e) = WriteLogger::init(
+            LevelFilter::Info,
+            Config::default(),
+            File::create("pulpo.log").unwrap(),
+        ){
         eprintln!("Failed to initiate the logger: {}", e);
         std::process::exit(1);
     };
-
 
     if cmdline.iter().any(|i| i==help_option1) || cmdline.iter().any(|i| i==help_option2) {
         println!(" ");
