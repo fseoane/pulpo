@@ -30,6 +30,7 @@ use std::time::Duration;
 use log::{error, info, warn};
 use simplelog::{Config, LevelFilter, SimpleLogger,WriteLogger};
 use std::fs::File;
+use single_instance::SingleInstance;
 
 type Result<T> = std::result::Result<T, PulpoError>;
 
@@ -113,6 +114,14 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
 
 
 fn main(){
+    
+    let instance = SingleInstance::new("whatever").unwrap();
+    if !instance.is_single(){
+        eprintln!("Failed to initiate program (another instance is already running)");
+        std::process::exit(1);
+    };
+    
+    
     let cmdline: Vec<String> = std::env::args().collect();
     
     let mut config_filename: &str = "/etc/pulpo.conf";
