@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="">
-    <file alias="tray_icon-red">tray_icon-red.png</file>
-    <file alias="tray_icon-green">tray_icon-green.png</file>
-    <file alias="notification">notification.png</file>
-  </gresource>
-</gresources>
