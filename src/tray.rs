@@ -38,7 +38,7 @@ fn tray_dnd_clicked(_item: &MenuItem) {
     } else if current=="off"{
         env::set_var("DND", String::from("on"));
     };
-    info!("DND after:{}",std::env::var("DND").unwrap());
+    info!("DND:{}",std::env::var("DND").unwrap());
 }
 
 
@@ -138,8 +138,8 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     let nfy_url_copy =  nfy_url.clone();    // this clone is needed to 'move´ it to the next closures of tray_menu_item_open_webbrowser
     let nfy_topics = String::from(ntfy_topics); 
 
-    let has_gotify_config = !String::from(got_token.clone()).is_empty();
-    let has_ntfy_config = !String::from(nfy_topics.clone()).is_empty();
+    let has_gotify_config = !String::from(got_url.clone()).is_empty();
+    let has_ntfy_config = !String::from(nfy_url.clone()).is_empty();
     
     // Initialize GTK
     gtk::init().expect("Failed to initialize GTK.");
