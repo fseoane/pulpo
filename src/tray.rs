@@ -128,7 +128,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     // Set your application name and icon
     let app_name: &str = "pulpo";
     //let icon_path= Path::new(env!("CARGO_MANIFEST_DIR")).join("resources");
-    let icon_path= std::env::current_dir().unwrap().join("resources");
+    let icon_path= std::env::current_dir().unwrap().join("resources/");
 
     let got_url = String::from(gotify_url);
     let got_url_copy = got_url.clone();     // this clone is needed to 'move´ it to the next closures of tray_menu_item_open_webbrowser
