@@ -314,12 +314,13 @@ fn main(){
     let mut counter = 0;
 
     info!("Waiting for network connection.");
+    println!("Waiting for network connection.");
     while counter < 12 && !active_internet_connection() { 
         thread::sleep(Duration::from_secs(5));
         counter += 1;
     };
-    info!("Network is avaible.");
-    println!("Network is avaible.");
+    info!("Network is available.");
+    println!("Network is available.");
  
 
     // let got_url = Url::parse(configdata.gotify.unwrap().gotify_url.as_str());
