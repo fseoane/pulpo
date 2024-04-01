@@ -114,12 +114,12 @@ impl GotifyWSClient {
                 if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
                     GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
                 };
-                
+
                 if std::env::var("DND").unwrap()=="off"{
                     let notif = Notification::new()
                         .summary(&m.title)
                         .body(&m.message)
-                        .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+                        //.icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
                         .show();
 
                     // if the notification fails some how log it but do not kill the process
