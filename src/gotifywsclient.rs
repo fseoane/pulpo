@@ -110,9 +110,9 @@ impl GotifyWSClient {
             // if a message was received create a notification
             if let Some(m) = message {
                 info!("[✉] Gotify message received | title:{} message:{}",m.title,m.message);
-                
+
                 info!("    DND:           {}", std::env::var("DND").unwrap()); 
-                info!("    SILENT:           {}", std::env::var("SILENT").unwrap()); 
+                info!("    SILENT:        {}", std::env::var("SILENT").unwrap()); 
 
                 if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
                     GotifyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
