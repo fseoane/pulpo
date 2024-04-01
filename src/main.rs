@@ -216,8 +216,8 @@ fn main(){
 
     info!("Reading config from:            {}", config_filename); 
     info!("------------------------------------------------------------------------");
-    println!("Reading config from:            {}", config_filename); 
-    println!("------------------------------------------------------------------------");
+    //println!("Reading config from:            {}", config_filename); 
+    //println!("------------------------------------------------------------------------");
 
     let configdata: ConfigData = read_config(config_filename);
     
@@ -250,7 +250,7 @@ fn main(){
         // Print out the values to `stdout`.
         tray_icon = configdata.config.tray_icon.as_str();
         info!("    config/tray_icon:           {}", tray_icon); 
-        println!("    config/tray_icon:           {}", tray_icon); 
+        //println!("    config/tray_icon:           {}", tray_icon); 
     }
 
 
@@ -272,10 +272,10 @@ fn main(){
         info!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
         info!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
         info!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
-        println!("    gotify/gotify_url:          {}", gotify_args.gotify_url.as_str());
-        println!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
-        println!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
-        println!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
+        //println!("    gotify/gotify_url:          {}", gotify_args.gotify_url.as_str());
+        //println!("    gotify/gotify_client_token: {}", gotify_args.gotify_token.as_str());
+        //println!("    gotify/gotify_sound:        {}", gotify_args.gotify_sound.as_str());
+        //println!("    gotify/gotify_icon:         {}", gotify_args.gotify_icon.as_str());
 
     };
 
@@ -299,10 +299,10 @@ fn main(){
         info!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
         info!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
         info!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
-        println!("    ntfy/ntfy_url:              {}", ntfy_args.ntfy_url.as_str());
-        println!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
-        println!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
-        println!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
+        //println!("    ntfy/ntfy_url:              {}", ntfy_args.ntfy_url.as_str());
+        //println!("    ntfy/ntfy_topics:           {}", ntfy_args.ntfy_topics.as_str());
+        //println!("    ntfy/ntfy_sound:            {}", ntfy_args.ntfy_sound.as_str());
+        //println!("    ntfy/ntfy_icon:             {}", ntfy_args.ntfy_icon.as_str());
 
     };
     info!("------------------------------------------------------------------------");
@@ -314,13 +314,13 @@ fn main(){
     let mut counter = 0;
 
     info!("Waiting for network connection.");
-    println!("Waiting for network connection.");
+    //println!("Waiting for network connection.");
     while counter < 12 && !active_internet_connection() { 
         thread::sleep(Duration::from_secs(5));
         counter += 1;
     };
     info!("Network is available.");
-    println!("Network is available.");
+    //println!("Network is available.");
  
 
     // let got_url = Url::parse(configdata.gotify.unwrap().gotify_url.as_str());

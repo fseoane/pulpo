@@ -209,16 +209,15 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     menu.show_all();
 
     // Create a new AppIndicator
-    println!("    icon_path:          {}", icon_path.to_str().unwrap());
-    println!("    tray_icon:          {}", tray_icon);
-    
+    //println!("    icon_path:          {}", icon_path.to_str().unwrap());
+    //println!("    tray_icon:          {}", tray_icon);  
     let _indicator = Indicator::builder("pulpo")
         .title(app_name)
         .category(IndicatorCategory::ApplicationStatus)
         .menu(&menu)
         .icon_theme_path(icon_path.to_str().unwrap())
         .icon(tray_icon, "pulpo")
-        //.attention_icon("notification.att.png", "pulpo attention")
+        .attention_icon("notification.att.png", "pulpo attention")
         .status(IndicatorStatus::Active)
         .build();
 

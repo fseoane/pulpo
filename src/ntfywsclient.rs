@@ -120,7 +120,11 @@ impl NtfyWSClient {
                     info!("[✉]Ntfy message received | title:{} message:{}",
                         format!("{}/{}",&m.topic,&tit).as_str(),
                         &messge
-                    ); 
+                    );
+
+                    info!("    DND:           {}", std::env::var("DND").unwrap()); 
+                    info!("    SILENT:           {}", std::env::var("SILENT").unwrap());  
+                    
                     if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap()=="off"{
                         NtfyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
                     };
