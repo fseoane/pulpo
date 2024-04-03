@@ -97,7 +97,7 @@ impl GotifyWSClient {
             info!("Connected to Gotify at {}", self.ws_url);
         }
 
-	let _notif = Notification::new()
+	    let _notif = Notification::new()
         	.summary("Category:email")
         	.body("This has nothing to do with emails.\nIt should not go away until you acknowledge it.")
         	.icon("thunderbird")
