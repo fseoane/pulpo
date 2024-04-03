@@ -99,7 +99,7 @@ impl GotifyWSClient {
 
         let _notif = notify_rust::Notification::new()
         	.summary("pulpo is listening")
-        	.body(format!("pulpo is listening for Gotify messages at {}",&ws_url))
+        	.body(format!("pulpo is listening for Gotify messages at {}",&ws_url).as_str())
         	.appname("pulpo")
             .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
             .timeout(2)
