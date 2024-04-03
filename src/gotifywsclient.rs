@@ -98,13 +98,11 @@ impl GotifyWSClient {
         }
 
         let _notif = notify_rust::Notification::new()
-        	.summary("Category:email")
-        	.body("This has nothing to do with emails.\nIt should not go away until you acknowledge it.")
-        	.icon("thunderbird")
-        	.appname("thunderbird")
-        	//.hint(Hint::Category("email".to_owned()))
-        	//.hint(Hint::Resident(true)) // this is not supported by all implementations
-        	.timeout(10) // this however is
+        	.summary("pulpo is listening")
+        	.body(format!("pulpo is listening for Gotify messages at {}",&ws_url))
+        	.appname("pulpo")
+            .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+            .timeout(2)
         	.show();
 
         
