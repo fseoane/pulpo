@@ -96,6 +96,17 @@ impl GotifyWSClient {
         if socket.can_read(){
             info!("Connected to Gotify at {}", self.ws_url);
         }
+
+	let _notif = Notification::new()
+        	.summary("Category:email")
+        	.body("This has nothing to do with emails.\nIt should not go away until you acknowledge it.")
+        	.icon("thunderbird")
+        	.appname("thunderbird")
+        	//.hint(Hint::Category("email".to_owned()))
+        	//.hint(Hint::Resident(true)) // this is not supported by all implementations
+        	.timeout(10) // this however is
+        	.show();
+
         
         loop {
             // attempt to read from the socket
