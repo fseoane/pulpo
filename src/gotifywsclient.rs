@@ -119,10 +119,12 @@ impl GotifyWSClient {
                 };
 
                 if std::env::var("DND").unwrap()=="off"{
-                    let notif = Notification::new()
+                    let notif = notify_rust::Notification::new()
                         .summary(&m.title)
                         .body(&m.message)
+                        .appname("pulpo")
                         .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+                        .timeout(10)
                         .show();
 
                     // if the notification fails some how log it but do not kill the process
@@ -134,7 +136,7 @@ impl GotifyWSClient {
                             m.title, m.message
                         ),
                         Err(e) => warn!("[!] Failed to send gotify desktop notification: {}", e),
-                    }
+                    };
                 };  
 
             }

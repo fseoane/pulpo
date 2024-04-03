@@ -47,31 +47,31 @@ fn tray_menu_item_open_webbrowser(_item: &MenuItem, url: &str) {
 }
 
 
-#[allow(dead_code)]
-fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
-    let menu = gtk::Menu::new();
+// #[allow(dead_code)]
+// fn tray_menu_append_submenu (parent: &gtk::MenuItem) {
+//     let menu = gtk::Menu::new();
 
-    let mi = gtk::MenuItem::with_label("Sub 1");
-    mi.connect_activate(tray_menu_item_clicked);
-    menu.append(&mi);
+//     let mi = gtk::MenuItem::with_label("Sub 1");
+//     mi.connect_activate(tray_menu_item_clicked);
+//     menu.append(&mi);
 
-    let prev_mi = mi;
-    let mi = gtk::MenuItem::with_label("Sub 2");
+//     let prev_mi = mi;
+//     let mi = gtk::MenuItem::with_label("Sub 2");
     
-    mi.connect_activate(glib::clone!(@weak prev_mi => move |_| {
-        toggle_sensitivity(&prev_mi.upcast::<gtk::Widget>());
-    }));
+//     mi.connect_activate(glib::clone!(@weak prev_mi => move |_| {
+//         toggle_sensitivity(&prev_mi.upcast::<gtk::Widget>());
+//     }));
 
-    menu.append(&mi);
+//     menu.append(&mi);
 
-    let mi = gtk::MenuItem::with_label("Sub 3");
-    mi.connect_activate(tray_menu_item_clicked);
-    menu.append(&mi);
+//     let mi = gtk::MenuItem::with_label("Sub 3");
+//     mi.connect_activate(tray_menu_item_clicked);
+//     menu.append(&mi);
 
-    menu.show_all();
+//     menu.show_all();
 
-    parent.set_submenu(Some(&menu));
-}
+//     parent.set_submenu(Some(&menu));
+// }
 
 
 fn tray_menu_append_about_submenu (

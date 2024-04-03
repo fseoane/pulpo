@@ -132,7 +132,9 @@ impl NtfyWSClient {
                         let notif = Notification::new()
                             .summary(format!("{}/{}",&m.topic,&tit).as_str())
                             .body(&messge)
+                            .appname("pulpo")
                             .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+                            .timeout(10)
                             .show();
                     
                         // if the notification fails some how log it but do not kill the process
@@ -145,7 +147,7 @@ impl NtfyWSClient {
                                 &messge
                             ),
                             Err(e) => warn!("[!]Failed to send Ntfy desktop notification: {}", e),
-                        }
+                        };
                     };
                 }
             }
