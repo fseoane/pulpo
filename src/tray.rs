@@ -86,7 +86,7 @@ fn tray_menu_append_about_submenu (
 
     let mut label: String = String::from("");
 
-    let app_and_author_str: &str = "pulpo v.1.0\n(C) 2024 - Fernando Seoane Gil\n";
+    let app_and_author_str: &str = "pulpo v.1.1\n(C) 2024 - Fernando Seoane Gil\n";
     let config_file_str: String = format!("Config file:\t\t{}\n-----------\n",config_file);
     label = format!("{}{}",app_and_author_str,config_file_str);
   
