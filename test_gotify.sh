@@ -1,0 +1,1 @@
+curl "https://yecla.mooo.com:20589/message?token=A6uU0z_jsexOl0P" -F "title=my title" -F "message=my message asdasd asd asd asd asd as dasdasd asdasd  asd as d asd asd sd asd asdmy message" -F "priority=5"
