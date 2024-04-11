@@ -16,12 +16,13 @@ toml = "0.8.12"
 appindicator3 = "0.3.0"
 gtk = "0.18.1"    
 #glib = "0.18"
-glib = "0.19.3"
-chrono = { version = "0.4.33" , features = ["serde"] }
+glib = "0.19.4"
+chrono = { version = "0.4.37" , features = ["serde"] }
 daemonize = "0.5.0"
 log = "0.4.21"
-notify-rust = { version = "4.10.0", features =["d"] }
-serde = { version = "1.0.196", features = ["derive"] }
+#notify-rust = { version = "4.11.0", features =["d"] }
+notify-rust = "4.11.0"
+serde = { version = "1.0.197", features = ["derive"] }
 serde_derive = "1.0.197"
 serde_json = "1.0.115"
 structopt = "0.3.26"
@@ -30,7 +31,7 @@ url =  { version = "2.5.0", features = ["serde"] }
 ears = "0.8.0"
 open = "5.1.2"
 #reqwest = "0.11.24"
-reqwest = "0.12.2"
+reqwest = "0.12.3"
 #nix = "0.26.0"
 #nix = "0.28.0"
 simplelog = "0.12.2"
