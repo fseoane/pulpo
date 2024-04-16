@@ -60,7 +60,6 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     info!("Starting gotify with {} and token {}",url,tokn);
     info!("...and will poll every {} seconds",poll);
 
-
     //daemonize the  process
     if !args.foreground{
         info!("Starting ntfy daemon.");

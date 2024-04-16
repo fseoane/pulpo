@@ -101,7 +101,6 @@ impl NtfyWSClient {
             info!("Connected to Ntfy at {}", self.ws_url);
         }
 
-
         let _notif = notify_rust::Notification::new()
             .summary("pulpo is listening")
             .body(format!("pulpo is listening for ntfy messages at {}",&ws_url).as_str())
@@ -109,6 +108,7 @@ impl NtfyWSClient {
             .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
             .timeout(2)
             .show();
+        
 
         loop {
             // attempt to read from the socket
@@ -137,6 +137,7 @@ impl NtfyWSClient {
                     if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap()=="off"{
                         NtfyWSClient::play_file(format!("resources/{}",notif_sound).as_str());
                     };
+
                     if std::env::var("DND").unwrap()=="off"{
                         let notif = Notification::new()
                             .summary(format!("{}/{}",&m.topic,&tit).as_str())
