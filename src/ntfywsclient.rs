@@ -101,13 +101,14 @@ impl NtfyWSClient {
             info!("Connected to Ntfy at {}", self.ws_url);
         }
 
-        let mut notif = notify_rust::Notification::new()
-            .summary("pulpo is ok")
-            .body(format!("pulpo is listening for ntfy messages at {}",&ws_url).as_str())
-            .appname("pulpo")
-            .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-            .timeout(Timeout::Never)
-            .show();
+        let mut notif: std::result::Result<notify_rust::NotificationHandle, notify_rust::error::Error>;
+        //let mut notif = notify_rust::Notification::new()
+            // .summary("pulpo is ok")
+            // .body(format!("pulpo is listening for ntfy messages at {}",&ws_url).as_str())
+            // .appname("pulpo")
+            // .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+            // .timeout(Timeout::Never)
+            // .show();
         
 
         loop {

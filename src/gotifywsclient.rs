@@ -4,6 +4,7 @@ use std::thread;
 use std::time::Duration;
 extern crate ears;
 use ears::{Sound, AudioController};
+use notify_rust::NotificationHandle;
 
 use crate::errors::PulpoError;
 //use crate::helpers::{get_cache_path, to_websocket};
@@ -97,13 +98,14 @@ impl GotifyWSClient {
             info!("Connected to Gotify at {}", self.ws_url);
         }
 
-        let mut notif = notify_rust::Notification::new()
-        	.summary("pulpo is ok")
-        	.body(format!("pulpo is listening for Gotify messages at {}",&ws_url).as_str())
-        	.appname("pulpo")
-            .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-            .timeout(Timeout::Never)
-            .show();
+        let mut notif:std::result::Result<notify_rust::NotificationHandle, notify_rust::error::Error>;
+        // let mut notif2 = notify_rust::Notification::new()
+        // 	.summary("pulpo is ok")
+        // 	.body(format!("pulpo is listening for Gotify messages at {}",&ws_url).as_str())
+        // 	.appname("pulpo")
+        //     .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
+        //     .timeout(Timeout::Never)
+        //     .show();
 
         
         loop {
