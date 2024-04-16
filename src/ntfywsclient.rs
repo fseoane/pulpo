@@ -9,7 +9,7 @@ use crate::errors::PulpoError;
 //use crate::helpers::{get_cache_path, to_websocket};
 
 use log::{info, warn};
-use notify_rust::Notification;
+use notify_rust::{Notification,Timeout};
 use serde::{Deserialize, Serialize};
 use tungstenite::Message;
 use url::Url;
@@ -101,12 +101,12 @@ impl NtfyWSClient {
             info!("Connected to Ntfy at {}", self.ws_url);
         }
 
-        let _notif = notify_rust::Notification::new()
+        let mut notif = notify_rust::Notification::new()
             .summary("pulpo is ok")
             .body(format!("pulpo is listening for ntfy messages at {}",&ws_url).as_str())
             .appname("pulpo")
             .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-            .timeout(2)
+            .timeout(Timeout::Never)
             .show();
         
 
@@ -139,12 +139,12 @@ impl NtfyWSClient {
                     };
 
                     if std::env::var("DND").unwrap()=="off"{
-                        let notif = Notification::new()
+                        notif = Notification::new()
                             .summary(format!("{}/{}",&m.topic,&tit).as_str())
                             .body(&messge)
                             .appname("pulpo")
                             .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-                            .timeout(10)
+                            .timeout(Timeout::Never)
                             .show();
                     
                         // if the notification fails some how log it but do not kill the process
