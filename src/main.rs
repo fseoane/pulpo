@@ -48,7 +48,7 @@ fn active_internet_connection() -> bool {
     }
 }
 
-fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
+fn log_gotify_messages(args: GotifyArgs,notification_timeout_secs: u32) -> Result<()> {
     // make sure the URL is clean
     let url = helpers::base_url(&args.gotify_url)?;
     let ws_url = helpers::to_websocket(url.clone())?;
@@ -71,14 +71,14 @@ fn log_gotify_messages(args: GotifyArgs) -> Result<()> {
     //Creating the client and looping
     info!("Creating gotify client");
     let gotify_cli = GotifyWSClient::new(ws_url, tokn, None);
-    match gotify_cli.run_loop(poll,sound.as_str(),icon.as_str()) {
+    match gotify_cli.run_loop(poll,sound.as_str(),icon.as_str(),notification_timeout_secs) {
         Ok(_) => return Ok(()),
         Err(e) => return Err(e),
     }
 
 }
 
-fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
+fn log_ntfy_messages(args: NtfyArgs,notification_timeout_secs: u32) -> Result<()> {
     // make sure the URL is clean
 
     let url = helpers::base_url(&args.ntfy_url)?;
@@ -103,7 +103,7 @@ fn log_ntfy_messages(args: NtfyArgs) -> Result<()> {
     //Creating the client and looping
     info!("Creating ntfy client");
     let ntfy_cli = NtfyWSClient::new(ws_url, topics);
-    match ntfy_cli.run_loop(poll,sound.as_str(),icon.as_str()) {
+    match ntfy_cli.run_loop(poll,sound.as_str(),icon.as_str(),notification_timeout_secs) {
         Ok(_) => return Ok(()),
         Err(e) => return Err(e),
     }
@@ -245,11 +245,17 @@ fn main(){
     };
 
     let mut tray_icon: &str = "";
+    let notification_timeout_secs: u32;
     if configdata.config.tray_icon.len()>0 {
         // Print out the values to `stdout`.
         tray_icon = configdata.config.tray_icon.as_str();
+        notification_timeout_secs = configdata.config.notification_timeout_secs;
         info!("    config/tray_icon:           {}", tray_icon); 
         //println!("    config/tray_icon:           {}", tray_icon); 
+    }
+    else {
+        notification_timeout_secs = 5;
+        tray_icon = "/opt/pulpo/resources/pulpo.png";
     }
 
 
@@ -344,14 +350,14 @@ fn main(){
     };
 
     let gotify_thread = || {
-        let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args);
+        let gtfy_res: std::result::Result<(), PulpoError> = log_gotify_messages(gotify_args,notification_timeout_secs);
         info!("{}","Exiting");
         info!("Gotify result: {:#?}",gtfy_res);
     };
 
 
     let ntfy_thread = || {
-        let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args);
+        let ntfy_res: std::result::Result<(), PulpoError> = log_ntfy_messages(ntfy_args,notification_timeout_secs);
         info!("{}","Exiting");
         info!("Ntfy result: {:#?}",ntfy_res);
     };

@@ -80,7 +80,7 @@ impl GotifyWSClient {
         while snd.is_playing() {}
     }
 
-    pub fn run_loop(&self, poll: u64, notif_sound: &str, notif_icon: &str) -> Result<()> {
+    pub fn run_loop(&self, poll: u64, notif_sound: &str, notif_icon: &str, notification_timeout_secs: u32) -> Result<()> {
         
         info!("{}","Starting gotify loop");
 
@@ -128,7 +128,7 @@ impl GotifyWSClient {
                         .appname("pulpo")
                         .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
                         .image_path(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-                        .timeout(Timeout::Milliseconds(5000))
+                        .timeout(Timeout::Milliseconds(notification_timeout_secs*1000))
                         .show();
 
                     // if the notification fails some how log it but do not kill the process

@@ -18,6 +18,7 @@ pub struct ConfigData {
 #[derive(Serialize, Deserialize)]
 pub struct GeneralConfig {
     pub tray_icon: String,
+    pub notification_timeout_secs: u32,
 }
 
 // Config struct holds to data from the `[gotify]` section.
