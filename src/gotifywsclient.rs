@@ -128,7 +128,7 @@ impl GotifyWSClient {
                         .appname("pulpo")
                         .icon(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
                         .image_path(format!("/opt/pulpo/resources/{}",notif_icon).as_str())
-                        .timeout(Timeout::Never)
+                        .timeout(Timeout::Milliseconds(10000))
                         .show();
 
                     // if the notification fails some how log it but do not kill the process
