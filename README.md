@@ -40,21 +40,22 @@ The bash script (install.sh) inside the realease package will copy all the neces
 - ntfy topics to be subscribed
 
 Configuration file pulpo.conf looks like this:
-
-                [config]
-                tray_icon=""pulpo-green-64x64.png"
-
-                [gotify]
-                gotify_url="http(s)://gotify-host:port"
-                gotify_client_token="gotify-client-token"
-                gotify_sound="notification.ogg"
-                gotify_icon="gotify-icon.png"
-
-                [ntfy]
-                ntfy_url="http(s)://ntfy-host:port"
-                ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
-                ntfy_sound="notification.ogg"
-                ntfy_icon="ntfy-icon.png"     
+        
+                  [config]
+                  tray_icon="/path/to/app-icon.png"
+                  notification_timeout_secs=5
+                  
+                  [gotify]
+                  gotify_url="http(s)://gotify-host:port"
+                  gotify_client_token="gotify-client-token"
+                  gotify_sound="gotify-sound-file.ogg"
+                  gotify_icon="gotify-icon-file.png"
+                  
+                  [ntfy]
+                  ntfy_url="http(s)://ntfy-host:port"
+                  ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
+                  ntfy_sound="ntfy-sound-file.ogg"
+                  ntfy_icon="ntfy-icon-file.png"  
 
 Note: You can configure only Gotify, only Ntfy, or both at the same time.
 
