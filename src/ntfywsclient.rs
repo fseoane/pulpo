@@ -127,7 +127,7 @@ impl NtfyWSClient {
                     info!("    DND:           {}", std::env::var("DND").unwrap()); 
                     info!("    SILENT:        {}", std::env::var("SILENT").unwrap());  
 
-                    if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap()=="off"{
+                    if std::env::var("SILENT").unwrap()=="off"{
                         NtfyWSClient::play_file(format!("/opt/pulpo/resources/{}",notif_sound).as_str());
                     };
 

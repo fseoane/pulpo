@@ -117,7 +117,7 @@ impl GotifyWSClient {
                 info!("    DND:           {}", std::env::var("DND").unwrap()); 
                 info!("    SILENT:        {}", std::env::var("SILENT").unwrap()); 
 
-                if std::env::var("SILENT").unwrap()=="off" && std::env::var("DND").unwrap().as_str()=="off"{
+                if std::env::var("SILENT").unwrap()=="off"{
                     GotifyWSClient::play_file(format!("/opt/pulpo/resources/{}",notif_sound).as_str());
                 };
 
