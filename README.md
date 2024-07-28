@@ -39,7 +39,7 @@ The bash script (install.sh) inside the realease package will copy all the neces
 - ntfy server url and port
 - ntfy topics to be subscribed
 
-Configuration file pulpo.conf looks like this:
+Configuration file pulpo.conf looks like this  (can be placed inside /etc):
         
                   [config]
                   tray_icon="/path/to/app-icon.png"
