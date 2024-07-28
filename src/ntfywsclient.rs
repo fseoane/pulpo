@@ -95,7 +95,7 @@ impl NtfyWSClient {
         info!("Ntfy websocket url: {}", ws_url);
 
         let (mut socket, 
-            _response) = tungstenite::connect(&ws_url)?;
+            _response) = tungstenite::connect(ws_url.as_str())?;
 
         if socket.can_read(){
             info!("Connected to Ntfy at {}", self.ws_url);

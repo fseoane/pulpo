@@ -92,7 +92,7 @@ impl GotifyWSClient {
 
         info!("Gotify websocket url: {}", ws_url);
 
-        let (mut socket, _response) = tungstenite::connect(&ws_url)?;
+        let (mut socket, _response) = tungstenite::connect(ws_url.as_str())?;
 
         if socket.can_read(){
             info!("Connected to Gotify at {}", self.ws_url);

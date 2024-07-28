@@ -4,7 +4,7 @@ use std::env;
 use std::path::Path;
 use appindicator3::{prelude::*, IndicatorStatus};
 use appindicator3::{Indicator, IndicatorCategory};
-use gtk::{prelude::*, MenuItem};
+use gtk::{prelude::*, CheckMenuItem, MenuItem};
 use open;
 use log::{error, info, warn};
 
@@ -15,28 +15,36 @@ fn toggle_sensitivity (widget: &gtk::Widget) {
 }
 
 
-fn tray_menu_item_clicked(item: &MenuItem) {
+fn tray_menu_item_clicked(item: &gtk::MenuItem) {
     info!("Menu item {} clicked!", item.label().unwrap());
 }
 
 
-fn tray_silent_clicked(_item: &MenuItem) {
+fn tray_silent_clicked(item: &gtk::CheckMenuItem) {
     let current = std::env::var("SILENT").unwrap();
     if current=="on"{
         env::set_var("SILENT", String::from("off"));
+        item.set_active(false);
+        item.set_label("Silent mode");
     } else if current=="off"{
         env::set_var("SILENT", String::from("on"));
+        item.set_active(true);
+        item.set_label("Silent mode ()");
     };
     info!("SILENT:{}",std::env::var("SILENT").unwrap());
 }
 
 
-fn tray_dnd_clicked(_item: &MenuItem) {
+fn tray_dnd_clicked(item: &gtk::CheckMenuItem) {
     let current = std::env::var("DND").unwrap();
     if current=="on"{
         env::set_var("DND", String::from("off"));
+        item.set_active(false);
+        item.set_label("Do not disturb");
     } else if current=="off"{
         env::set_var("DND", String::from("on"));
+        item.set_active(true);
+        item.set_label("Do not disturb ()");
     };
     info!("DND:{}",std::env::var("DND").unwrap());
 }
@@ -149,16 +157,16 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     let menu = gtk::Menu::new();
 
     // Create a menu items
-    let menu_item = gtk::CheckMenuItem::with_label("Silent mode");
+    let menu_item: gtk::CheckMenuItem = gtk::CheckMenuItem::with_label("Silent mode");
     menu_item.connect_activate(|item| {
-        tray_silent_clicked(item.upcast_ref::<gtk::MenuItem>())
+        tray_silent_clicked(item.upcast_ref::<gtk::CheckMenuItem>())
     });
     menu.append(&menu_item);
     menu_item.show();
 
-    let menu_item = gtk::CheckMenuItem::with_label("Do not disturb");
+    let menu_item: gtk::CheckMenuItem = gtk::CheckMenuItem::with_label("Do not disturb");
     menu_item.connect_activate(|item| {
-        tray_dnd_clicked(item.upcast_ref::<gtk::MenuItem>())
+        tray_dnd_clicked(item.upcast_ref::<gtk::CheckMenuItem>())
     });
     menu.append(&menu_item);
     menu_item.show();
@@ -168,7 +176,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     
    
     if has_gotify_config{
-        let menu_item = gtk::MenuItem::with_label("Open Gotify");
+        let menu_item: gtk::MenuItem = gtk::MenuItem::with_label("Open Gotify");
         menu_item.connect_activate( move |item |{
             tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),got_url_copy.as_str())
         });
@@ -176,7 +184,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     };
 
     if has_ntfy_config{
-        let menu_item = gtk::MenuItem::with_label("Open Ntfy");
+        let menu_item: gtk::MenuItem = gtk::MenuItem::with_label("Open Ntfy");
         menu_item.connect_activate( move |item |{
             tray_menu_item_open_webbrowser(item.upcast_ref::<gtk::MenuItem>(),nfy_url_copy.as_str())
         });
@@ -186,7 +194,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     let menu_item = gtk::SeparatorMenuItem::default();
     menu.append(&menu_item);
     
-    let menu_item = gtk::MenuItem::with_label("About");
+    let menu_item: gtk::MenuItem = gtk::MenuItem::with_label("About");
     tray_menu_append_about_submenu(
         &menu_item,
         config_file,
@@ -198,7 +206,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     //tray_menu_append_about_submenu(&menu_item,config_file,got_url,got_token,nfy_url,nfy_topics);
     menu.append(&menu_item);
 
-    let menu_item = gtk::MenuItem::with_label("Quit");
+    let menu_item: gtk::MenuItem = gtk::MenuItem::with_label("Quit");
     menu_item.connect_activate(|_| {
         gtk::main_quit();
         std::process::exit(1);
@@ -211,7 +219,7 @@ pub fn build_tray_menu(config_file: &str, tray_icon: &str, gotify_url: &str, got
     // Create a new AppIndicator
     //println!("    icon_path:          {}", icon_path.to_str().unwrap());
     //println!("    tray_icon:          {}", tray_icon);  
-    let _indicator = Indicator::builder("pulpo")
+    let _indicator: Indicator = Indicator::builder("pulpo")
         .title(app_name)
         .category(IndicatorCategory::ApplicationStatus)
         .menu(&menu)
