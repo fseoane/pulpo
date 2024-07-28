@@ -104,7 +104,7 @@ fn tray_menu_append_about_submenu (
 
     let gotify_conf_str: String;
     if !String::from(gotify_conf_url).is_empty() {
-        gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t{}\n",gotify_conf_url,gotify_conf_token);
+        gotify_conf_str = format!("Gotify url:\t\t{}\nGotify token:\t\t{}\n",gotify_conf_url,gotify_conf_token);
         label = format!("{}{}",label,gotify_conf_str);
     };
 
