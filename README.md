@@ -66,6 +66,7 @@ To install the application from AUR (Arch User Repo) you can use an AUR helper l
 
 
 ### 3.Execution
-Once installed at /opt/pulpo and configured (i.e. in /etc/pulpo.conf) ypu can run it by:
-         /opt/pulpo/pulpo -c /etc/pulpo.conf
+Once installed at /opt/pulpo and configured (i.e. in /etc/pulpo.conf) you can run it by:
+
+                 /opt/pulpo/pulpo -c /etc/pulpo.conf
          
