@@ -7,10 +7,7 @@ It provides web based service, API,  and also mobile application, but I was miss
 ## 1.Requirements
 Built on Rust
 
-It also requires "Ayatana AppIndicator3" and Gnome shell extension "AppIndicator and KStatusNotifierItem Support".
-
-The Gnome shell extension "AppIndicator and KStatusNotifierItem Support" can be installed from : https://extensions.gnome.org/extension/615/appindicator-support/
-
+It also requires "Ayatana AppIndicator3".
 
 
 ### 2.Installation
@@ -23,7 +20,11 @@ Install the prerequisites for your distribution:
 - Arch :
 
         sudo pacman -S libappindicator-gtk3
+
+    In case of problems, install these too: libayatana-appindicator libayatana-indicator libindicator-gtk3 with
   
+        sudo pacman -S libappindicator-gtk3 libayatana-appindicator libayatana-indicator libindicator-gtk3
+   
 
 #### 2.1.B.Installing the precompiled ZIP release package
 
@@ -38,22 +39,23 @@ The bash script (install.sh) inside the realease package will copy all the neces
 - ntfy server url and port
 - ntfy topics to be subscribed
 
-Configuration file pulpo.conf looks like this:
-
-                [config]
-                tray_icon=""pulpo-green-64x64.png"
-
-                [gotify]
-                gotify_url="http(s)://gotify-host:port"
-                gotify_client_token="gotify-client-token"
-                gotify_sound="notification.ogg"
-                gotify_icon="gotify-icon.png"
-
-                [ntfy]
-                ntfy_url="http(s)://ntfy-host:port"
-                ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
-                ntfy_sound="notification.ogg"
-                ntfy_icon="ntfy-icon.png"     
+Configuration file pulpo.conf looks like this  (can be placed inside /etc):
+        
+                  [config]
+                  tray_icon="/path/to/app-icon.png"
+                  notification_timeout_secs=5
+                  
+                  [gotify]
+                  gotify_url="http(s)://gotify-host:port"
+                  gotify_client_token="gotify-client-token"
+                  gotify_sound="gotify-sound-file.ogg"
+                  gotify_icon="gotify-icon-file.png"
+                  
+                  [ntfy]
+                  ntfy_url="http(s)://ntfy-host:port"
+                  ntfy_topics="Topic1,Topic2,Topic3,Topic4,...,topicN"
+                  ntfy_sound="ntfy-sound-file.ogg"
+                  ntfy_icon="ntfy-icon-file.png"  
 
 Note: You can configure only Gotify, only Ntfy, or both at the same time.
 
@@ -63,4 +65,8 @@ To install the application from AUR (Arch User Repo) you can use an AUR helper l
                 yay -S pulpo-bin
 
 
+### 3.Execution
+Once installed at /opt/pulpo and configured (i.e. in /etc/pulpo.conf) you can run it by:
 
+                 /opt/pulpo/pulpo -c /etc/pulpo.conf
+         
