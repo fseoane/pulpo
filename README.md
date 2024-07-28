@@ -7,10 +7,7 @@ It provides web based service, API,  and also mobile application, but I was miss
 ## 1.Requirements
 Built on Rust
 
-It also requires "Ayatana AppIndicator3" and Gnome shell extension "AppIndicator and KStatusNotifierItem Support".
-
-The Gnome shell extension "AppIndicator and KStatusNotifierItem Support" can be installed from : https://extensions.gnome.org/extension/615/appindicator-support/
-
+It also requires "Ayatana AppIndicator3".
 
 
 ### 2.Installation
@@ -23,7 +20,11 @@ Install the prerequisites for your distribution:
 - Arch :
 
         sudo pacman -S libappindicator-gtk3
+
+    In case of problems, install these too: libayatana-appindicator libayatana-indicator libindicator-gtk3 with
   
+        sudo pacman -S libappindicator-gtk3 libayatana-appindicator libayatana-indicator libindicator-gtk3
+   
 
 #### 2.1.B.Installing the precompiled ZIP release package
 
